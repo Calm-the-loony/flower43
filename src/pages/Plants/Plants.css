@@ -1,0 +1,688 @@
+.plants-page {
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, #FFFBF5 0%, #FEF8F0 50%, #FFFBF5 100%);
+  min-height: 100vh;
+  padding: 100px 0 60px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Hero секция */
+.plants-hero {
+  text-align: center;
+  margin-bottom: 60px;
+  padding: 60px 0;
+  background: linear-gradient(135deg, rgba(139, 201, 161, 0.1) 0%, rgba(199, 167, 231, 0.1) 100%);
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.plants-hero::before {
+  content: '🌿🌱🌵🍃🌸';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  font-size: 8rem;
+  opacity: 0.03;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.plants-hero-content h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: #2D5016;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, #2D5016, #4A7C2A);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.plants-hero-content p {
+  font-size: 1.3rem;
+  color: #6B5B7D;
+  max-width: 500px;
+  margin: 0 auto 30px;
+  line-height: 1.6;
+}
+
+.hero-features {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.feature {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 20px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+}
+
+.feature-icon {
+  font-size: 1.5rem;
+}
+
+.feature-text {
+  font-weight: 600;
+  color: #2D5016;
+  font-size: 1rem;
+}
+
+/* Фильтры */
+.plants-filters {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  margin-bottom: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.filters-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+/* Поиск */
+.search-box {
+  position: relative;
+  max-width: 500px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 15px 50px 15px 20px;
+  border: 2px solid #E8E6E1;
+  border-radius: 15px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #8BC9A1;
+  box-shadow: 0 0 0 3px rgba(139, 201, 161, 0.1);
+}
+
+.search-icon {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.2rem;
+  color: #6B5B7D;
+}
+
+/* Категории */
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.filter-label {
+  font-weight: 600;
+  color: #2D5016;
+  font-size: 1.1rem;
+}
+
+.category-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.category-filter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border: 2px solid #E8E6E1;
+  border-radius: 25px;
+  background: white;
+  color: #6B5B7D;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.category-filter:hover {
+  border-color: #8BC9A1;
+  color: #2D5016;
+}
+
+.category-filter.active {
+  background: #8BC9A1;
+  border-color: #8BC9A1;
+  color: white;
+}
+
+.category-count {
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+/* Строка фильтров */
+.filter-row {
+  display: flex;
+  gap: 20px;
+  align-items: end;
+  flex-wrap: wrap;
+}
+
+.filter-select {
+  padding: 12px 16px;
+  border: 2px solid #E8E6E1;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  background: white;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+  min-width: 200px;
+}
+
+.filter-select:focus {
+  outline: none;
+  border-color: #8BC9A1;
+}
+
+.clear-filters-btn {
+  padding: 12px 24px;
+  background: rgba(231, 76, 60, 0.1);
+  color: #E74C3C;
+  border: 2px solid #E74C3C;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.clear-filters-btn:hover {
+  background: #E74C3C;
+  color: white;
+}
+
+/* Результаты фильтрации */
+.filter-results {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20px;
+  border-top: 1px solid #E8E6E1;
+  margin-top: 20px;
+}
+
+.filter-results p {
+  color: #6B5B7D;
+  font-weight: 500;
+}
+
+.clear-filters-mobile {
+  background: none;
+  border: none;
+  color: #E74C3C;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+/* Сетка растений */
+.plants-grid-section {
+  margin-bottom: 60px;
+}
+
+.plants-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 30px;
+}
+
+.plant-card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  transition: all 0.3s ease;
+}
+
+.plant-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.plant-image {
+  position: relative;
+  height: 300px;
+  overflow: hidden;
+}
+
+.plant-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.plant-card:hover .plant-image img {
+  transform: scale(1.05);
+}
+
+/* Кнопка избранного */
+.favorite-heart {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  z-index: 2;
+}
+
+.favorite-heart:hover {
+  background: white;
+  transform: scale(1.1);
+}
+
+.favorite-heart svg {
+  width: 20px;
+  height: 20px;
+  color: #ccc;
+  transition: all 0.3s ease;
+}
+
+.favorite-heart.active svg {
+  color: #E74C3C;
+  fill: #E74C3C;
+}
+
+.favorite-heart:hover svg {
+  color: #E74C3C;
+}
+
+/* Бейдж категории */
+.plant-badge {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #6B5B7D;
+  padding: 6px 12px;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  backdrop-filter: blur(10px);
+}
+
+/* Информация о растении */
+.plant-info {
+  padding: 25px;
+}
+
+.plant-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #2D5016;
+  margin-bottom: 8px;
+}
+
+.plant-description {
+  color: #6B5B7D;
+  font-size: 0.95rem;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+/* Характеристики растения */
+.plant-specs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 15px;
+  padding: 15px;
+  background: rgba(139, 201, 161, 0.05);
+  border-radius: 12px;
+}
+
+.spec {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.spec-icon {
+  font-size: 1.1rem;
+  width: 20px;
+  text-align: center;
+}
+
+.spec-text {
+  font-size: 0.85rem;
+  color: #2D5016;
+  font-weight: 500;
+}
+
+.plant-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.plant-tag {
+  background: rgba(139, 201, 161, 0.1);
+  color: #2D5016;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.plant-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+
+.plant-price {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #2D5016;
+}
+
+.plant-add-to-cart {
+  background: linear-gradient(135deg, #8BC9A1, #7AB890);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+}
+
+.plant-add-to-cart:hover:not(.added) {
+  background: linear-gradient(135deg, #7AB890, #6AA780);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(139, 201, 161, 0.4);
+}
+
+.plant-add-to-cart.added {
+  background: linear-gradient(135deg, #7AB890, #6AA780) !important;
+  transform: scale(1.05);
+}
+
+.plant-add-to-cart.added::before {
+  content: '✓ Добавлено';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #7AB890, #6AA780);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Нет результатов */
+.no-results {
+  text-align: center;
+  padding: 80px 20px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.no-results-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  opacity: 0.7;
+}
+
+.no-results h3 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #2D5016;
+  margin-bottom: 15px;
+}
+
+.no-results p {
+  color: #6B5B7D;
+  margin-bottom: 30px;
+  font-size: 1.1rem;
+}
+
+/* CTA секция */
+.plants-cta {
+  background: linear-gradient(135deg, #8BC9A1 0%, #7AB890 100%);
+  padding: 60px 40px;
+  border-radius: 20px;
+  text-align: center;
+  color: white;
+}
+
+.cta-content h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.cta-content p {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+  opacity: 0.9;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.cta-button {
+  padding: 16px 32px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+}
+
+.cta-button.primary {
+  background: white;
+  color: #2D5016;
+}
+
+.cta-button.primary:hover {
+  background: #f8f8f8;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.cta-button.secondary {
+  background: transparent;
+  color: white;
+  border: 2px solid white;
+}
+
+.cta-button.secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Анимация сердца */
+.favorite-heart.heart-animate {
+  animation: heartBeat 0.6s ease;
+}
+
+@keyframes heartBeat {
+  0% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.3);
+  }
+  50% {
+    transform: scale(0.9);
+  }
+  75% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .plants-page {
+    padding: 80px 0 40px;
+  }
+  
+  .plants-hero-content h1 {
+    font-size: 2.5rem;
+  }
+  
+  .hero-features {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .filters-grid {
+    gap: 20px;
+  }
+  
+  .category-filters {
+    gap: 8px;
+  }
+  
+  .category-filter {
+    padding: 10px 16px;
+    font-size: 0.85rem;
+  }
+  
+  .filter-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .filter-select {
+    min-width: auto;
+  }
+  
+  .plants-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  
+  .plant-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+  }
+  
+  .plant-add-to-cart {
+    justify-content: center;
+  }
+  
+  .cta-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .cta-button {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 15px;
+  }
+  
+  .plants-hero {
+    padding: 40px 20px;
+  }
+  
+  .plants-hero-content h1 {
+    font-size: 2rem;
+  }
+  
+  .plants-filters {
+    padding: 20px;
+  }
+  
+  .plants-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .favorite-heart {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .favorite-heart svg {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .plant-specs {
+    padding: 12px;
+  }
+} 

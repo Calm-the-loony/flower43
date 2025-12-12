@@ -1,0 +1,692 @@
+/* Стили только для страницы консультации */
+.consultation-page {
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, #FFFBF5 0%, #FEF8F0 50%, #FFFBF5 100%);
+  min-height: 100vh;
+  padding: 100px 0 60px;
+}
+
+.consultation-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Hero секция */
+.consultation-hero {
+  text-align: center;
+  margin-bottom: 60px;
+  padding: 80px 0;
+  background: linear-gradient(135deg, rgba(199, 167, 231, 0.1) 0%, rgba(139, 201, 161, 0.1) 100%);
+  border-radius: 25px;
+  position: relative;
+  overflow: hidden;
+}
+
+.consultation-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%238BC9A1' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+  opacity: 0.3;
+}
+
+.consultation-hero-content {
+  position: relative;
+  z-index: 1;
+}
+
+.consultation-hero-content h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 3.2rem;
+  font-weight: 700;
+  color: #2D5016;
+  margin-bottom: 20px;
+}
+
+.consultation-hero-content p {
+  font-size: 1.3rem;
+  color: #6B5B7D;
+  max-width: 600px;
+  margin: 0 auto 30px;
+  line-height: 1.6;
+}
+
+.consultation-hero-features {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.consultation-feature {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 25px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.consultation-feature-icon {
+  font-size: 1.3rem;
+}
+
+.consultation-feature-text {
+  font-weight: 600;
+  color: #2D5016;
+  font-size: 1rem;
+}
+
+/* Анимированные элементы */
+.consultation-hero-visual {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+.consultation-floating {
+  position: absolute;
+  font-size: 2rem;
+  animation: consultation-float 6s ease-in-out infinite;
+  opacity: 0.7;
+}
+
+.consultation-flower {
+  top: 20%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.consultation-leaf {
+  top: 60%;
+  right: 15%;
+  animation-delay: 2s;
+}
+
+.consultation-sparkle {
+  bottom: 20%;
+  left: 20%;
+  animation-delay: 4s;
+}
+
+@keyframes consultation-float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-15px) rotate(5deg);
+  }
+}
+
+/* Основная форма */
+.consultation-form-section {
+  margin-bottom: 80px;
+}
+
+.consultation-form-container {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 40px;
+  align-items: start;
+}
+
+.consultation-form {
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.consultation-form-section-group {
+  margin-bottom: 40px;
+  padding-bottom: 30px;
+  border-bottom: 1px solid #F8F6F4;
+}
+
+.consultation-form-section-group:last-of-type {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.consultation-form-section-group h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #2D5016;
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.consultation-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.consultation-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.consultation-full-width {
+  grid-column: 1 / -1;
+}
+
+.consultation-form-group label {
+  font-weight: 600;
+  color: #2D5016;
+  font-size: 0.95rem;
+}
+
+.consultation-form-group input,
+.consultation-form-group select,
+.consultation-form-group textarea {
+  padding: 14px 16px;
+  border: 2px solid #E8E6E1;
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: white;
+  font-family: inherit;
+}
+
+.consultation-form-group input:focus,
+.consultation-form-group select:focus,
+.consultation-form-group textarea:focus {
+  outline: none;
+  border-color: #C7A7E7;
+  box-shadow: 0 0 0 3px rgba(199, 167, 231, 0.1);
+}
+
+.consultation-form-group textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.consultation-character-count {
+  text-align: right;
+  font-size: 0.85rem;
+  color: #6B5B7D;
+  margin-top: 5px;
+}
+
+/* Чекбоксы */
+.consultation-checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.consultation-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  font-weight: 500;
+  color: #2D5016;
+}
+
+.consultation-checkbox input {
+  display: none;
+}
+
+.consultation-checkmark {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #E8E6E1;
+  border-radius: 4px;
+  position: relative;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.consultation-checkbox input:checked + .consultation-checkmark {
+  background: #C7A7E7;
+  border-color: #C7A7E7;
+}
+
+.consultation-checkbox input:checked + .consultation-checkmark::after {
+  content: '✓';
+  position: absolute;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Кнопка отправки */
+.consultation-form-actions {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.consultation-submit-button {
+  background: linear-gradient(135deg, #C7A7E7, #B896DF);
+  color: white;
+  border: none;
+  padding: 18px 40px;
+  border-radius: 15px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 250px;
+  justify-content: center;
+}
+
+.consultation-submit-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #B896DF, #A885D7);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(199, 167, 231, 0.4);
+}
+
+.consultation-submit-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.consultation-submitting {
+  background: linear-gradient(135deg, #B896DF, #A885D7);
+}
+
+.consultation-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid transparent;
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: consultation-spin 1s linear infinite;
+}
+
+@keyframes consultation-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.consultation-form-note {
+  color: #6B5B7D;
+  font-size: 0.9rem;
+  margin-top: 15px;
+}
+
+/* Боковая панель */
+.consultation-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  position: sticky;
+  top: 120px;
+}
+
+.consultation-sidebar-card {
+  background: white;
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.consultation-sidebar-card h4 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #2D5016;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.consultation-sidebar-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.consultation-sidebar-card li {
+  padding: 8px 0;
+  color: #6B5B7D;
+  position: relative;
+  padding-left: 15px;
+}
+
+.consultation-sidebar-card li::before {
+  content: '•';
+  color: #C7A7E7;
+  position: absolute;
+  left: 0;
+  font-weight: bold;
+}
+
+.consultation-contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.consultation-contact-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 15px;
+  background: rgba(199, 167, 231, 0.1);
+  border-radius: 10px;
+  color: #2D5016;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.consultation-contact-link:hover {
+  background: rgba(199, 167, 231, 0.2);
+  transform: translateX(5px);
+}
+
+/* Секция доверия */
+.consultation-trust-section {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.consultation-trust-section h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2D5016;
+  margin-bottom: 50px;
+}
+
+.consultation-trust-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+}
+
+.consultation-trust-card {
+  background: white;
+  padding: 30px 25px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  transition: transform 0.3s ease;
+}
+
+.consultation-trust-card:hover {
+  transform: translateY(-5px);
+}
+
+.consultation-trust-icon {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+  display: block;
+}
+
+.consultation-trust-card h4 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #2D5016;
+  margin-bottom: 12px;
+}
+
+.consultation-trust-card p {
+  color: #6B5B7D;
+  line-height: 1.5;
+}
+
+/* Экран успеха */
+.consultation-success {
+  text-align: center;
+  padding: 80px 40px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.consultation-success-animation {
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.consultation-success-icon {
+  font-size: 5rem;
+  animation: consultation-bounce 2s ease infinite;
+}
+
+.consultation-confetti {
+  position: absolute;
+  top: -20px;
+  right: -10px;
+  font-size: 2rem;
+  animation: consultation-confetti 3s ease infinite;
+}
+
+@keyframes consultation-bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes consultation-confetti {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-15px) rotate(90deg);
+  }
+  50% {
+    transform: translateY(0) rotate(180deg);
+  }
+  75% {
+    transform: translateY(-10px) rotate(270deg);
+  }
+}
+
+.consultation-success h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2D5016;
+  margin-bottom: 20px;
+}
+
+.consultation-success-message {
+  font-size: 1.2rem;
+  color: #6B5B7D;
+  margin-bottom: 40px;
+  line-height: 1.6;
+}
+
+.consultation-success-details {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 40px;
+}
+
+.consultation-detail-card {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 20px;
+  background: rgba(199, 167, 231, 0.1);
+  border-radius: 12px;
+  text-align: left;
+}
+
+.consultation-detail-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.consultation-detail-card h4 {
+  font-weight: 700;
+  color: #2D5016;
+  margin-bottom: 5px;
+}
+
+.consultation-detail-card p {
+  color: #6B5B7D;
+  margin: 0;
+}
+
+.consultation-success-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.consultation-cta-button {
+  padding: 14px 28px;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+  min-width: 200px;
+  text-align: center;
+}
+
+.consultation-primary {
+  background: linear-gradient(135deg, #C7A7E7, #B896DF);
+  color: white;
+}
+
+.consultation-primary:hover {
+  background: linear-gradient(135deg, #B896DF, #A885D7);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(199, 167, 231, 0.4);
+}
+
+.consultation-secondary {
+  background: transparent;
+  color: #2D5016;
+  border: 2px solid #C7A7E7;
+}
+
+.consultation-secondary:hover {
+  background: rgba(199, 167, 231, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Адаптивность */
+@media (max-width: 1024px) {
+  .consultation-form-container {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .consultation-sidebar {
+    position: static;
+  }
+}
+
+@media (max-width: 768px) {
+  .consultation-page {
+    padding: 80px 0 40px;
+  }
+  
+  .consultation-hero {
+    padding: 60px 20px;
+  }
+  
+  .consultation-hero-content h1 {
+    font-size: 2.5rem;
+  }
+  
+  .consultation-hero-features {
+    gap: 15px;
+  }
+  
+  .consultation-feature {
+    padding: 12px 20px;
+  }
+  
+  .consultation-form {
+    padding: 30px 25px;
+  }
+  
+  .consultation-form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .consultation-trust-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .consultation-success-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .consultation-cta-button {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .consultation-container {
+    padding: 0 15px;
+  }
+  
+  .consultation-hero-content h1 {
+    font-size: 2rem;
+  }
+  
+  .consultation-hero-content p {
+    font-size: 1.1rem;
+  }
+  
+  .consultation-form {
+    padding: 25px 20px;
+  }
+  
+  .consultation-form-section-group h3 {
+    font-size: 1.1rem;
+  }
+  
+  .consultation-submit-button {
+    min-width: auto;
+    width: 100%;
+  }
+  
+  .consultation-trust-section h2 {
+    font-size: 2rem;
+  }
+  
+  .consultation-success {
+    padding: 60px 20px;
+  }
+  
+  .consultation-success h1 {
+    font-size: 2rem;
+  }
+}
