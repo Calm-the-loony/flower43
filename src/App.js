@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { CartProvider } from './context/CartContext';
 import { FavoritesProvider } from './context/FavoritesContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary';
 import Header from './components/Header/Header';
 import Hero from './components/Hero/Hero';
 import BouquetShowcase from './components/BouquetShowcase/BouquetShowcase';
@@ -20,7 +21,14 @@ import Bouquets from './pages/Bouquets/Bouquets';
 import Plants from './pages/Plants/Plants';
 import Compositions from './pages/Compositions/Compositions';
 import CustomBouquet from './pages/CustomBouquet/CustomBouquet';
-import Consultation from './pages/Consultation/Consultation'; // Добавляем импорт страницы консультации
+import Consultation from './pages/Consultation/Consultation';
+
+// Импортируем страницы ошибок
+import NotFound from './pages/ErrorPages/NotFound';
+import ServerError from './pages/ErrorPages/ServerError';
+import AccessDenied from './pages/ErrorPages/AccessDenied';
+import NetworkError from './pages/ErrorPages/NetworkError';
+
 import './App.css';
 
 // Компонент-обертка для передачи userId в CartProvider
@@ -64,6 +72,7 @@ function AppContent() {
         <Header />
         <main className="main-content">
           <Routes>
+            {/* Основные маршруты */}
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<AuthForm type="login" />} />
             <Route path="/register" element={<AuthForm type="register" />} />
@@ -79,8 +88,15 @@ function AppContent() {
             <Route path="/compositions" element={<Compositions />} />
             <Route path="/custom-bouquet" element={<CustomBouquet />} />
             <Route path="/custom-composition" element={<CustomBouquet />} />
-            {/* Добавляем маршрут для страницы консультации */}
             <Route path="/consultation" element={<Consultation />} />
+
+            {/* Страницы ошибок */}
+            <Route path="/500" element={<ServerError />} />
+            <Route path="/403" element={<AccessDenied />} />
+            <Route path="/network-error" element={<NetworkError />} />
+            
+            {/* Маршрут 404 должен быть последним */}
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
         <Footer />
@@ -91,13 +107,15 @@ function AppContent() {
 
 function App() {
   return (
-    <AuthProvider>
-      <CartProviderWrapper>
-        <FavoritesProviderWrapper>
-          <AppContent />
-        </FavoritesProviderWrapper>
-      </CartProviderWrapper>
-    </AuthProvider>
+    <ErrorBoundary>
+      <AuthProvider>
+        <CartProviderWrapper>
+          <FavoritesProviderWrapper>
+            <AppContent />
+          </FavoritesProviderWrapper>
+        </CartProviderWrapper>
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }
 

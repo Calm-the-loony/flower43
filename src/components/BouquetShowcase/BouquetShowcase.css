@@ -624,3 +624,226 @@
     height: 16px;
   }
 }
+/* Добавьте эти стили в конец существующего CSS файла */
+
+/* Hero секция из моего кода */
+.bouquets-hero {
+  text-align: center;
+  padding: 120px 20px 80px;
+  background: linear-gradient(135deg, #F8F5F0 0%, #FFFEFC 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.bouquets-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(139, 201, 161, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(199, 167, 231, 0.05) 0%, transparent 50%);
+}
+
+.hero-decoration {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.flower-decoration {
+  font-size: 2.5rem;
+  opacity: 0.5;
+  animation: float 6s ease-in-out infinite;
+}
+
+.flower-decoration:last-child {
+  animation-delay: 1.5s;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.bouquets-hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 4rem;
+  font-weight: 300;
+  color: #2C3E50;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.bouquets-hero p {
+  font-size: 1.3rem;
+  color: #7F8C8D;
+  max-width: 500px;
+  margin: 20px auto 0;
+  font-weight: 300;
+  line-height: 1.6;
+}
+
+.hero-wave {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  color: #FFFFFF;
+  opacity: 0.7;
+}
+
+.hero-wave svg {
+  display: block;
+  width: 100%;
+  height: 60px;
+}
+
+/* Поиск из моего кода */
+.search-section {
+  position: relative;
+  z-index: 10;
+  margin: -30px auto 40px;
+  padding: 0 20px;
+  max-width: 1200px;
+}
+
+.search-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.search-input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 20px;
+  padding: 8px 20px;
+  box-shadow: 
+    0 10px 40px rgba(0, 0, 0, 0.05),
+    0 2px 10px rgba(139, 201, 161, 0.1);
+  border: 1px solid rgba(139, 201, 161, 0.1);
+  transition: all 0.3s ease;
+}
+
+.search-input-group:focus-within {
+  box-shadow: 
+    0 15px 50px rgba(0, 0, 0, 0.08),
+    0 0 0 4px rgba(139, 201, 161, 0.1);
+}
+
+.search-input {
+  flex: 1;
+  border: none;
+  padding: 16px 0;
+  font-size: 1.1rem;
+  color: #2C3E50;
+  background: transparent;
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: #BDC3C7;
+  font-weight: 300;
+}
+
+.search-icon {
+  width: 20px;
+  height: 20px;
+  color: #8BC9A1;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.search-clear-btn {
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  color: #BDC3C7;
+  transition: color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-clear-btn:hover {
+  color: #E74C3C;
+}
+
+.search-clear-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.search-spinner {
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+  border: 2px solid #E8E6E1;
+  border-top-color: #8BC9A1;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Обновленные фильтры */
+.bouquets-filters {
+  margin-top: 20px;
+}
+
+/* Адаптивность для нового дизайна */
+@media (max-width: 768px) {
+  .bouquets-hero {
+    padding: 100px 20px 60px;
+  }
+  
+  .bouquets-hero h1 {
+    font-size: 2.8rem;
+  }
+  
+  .hero-decoration {
+    gap: 15px;
+  }
+  
+  .flower-decoration {
+    font-size: 2rem;
+  }
+  
+  .bouquets-hero p {
+    font-size: 1.1rem;
+  }
+  
+  .search-section {
+    margin: -20px auto 30px;
+  }
+  
+  .search-input-group {
+    padding: 5px 15px;
+  }
+  
+  .search-input {
+    padding: 14px 0;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .bouquets-hero h1 {
+    font-size: 2.2rem;
+  }
+  
+  .search-input-group {
+    padding: 8px 15px;
+  }
+}
