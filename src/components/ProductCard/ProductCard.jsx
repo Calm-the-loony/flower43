@@ -4,15 +4,14 @@ import { useCart } from '../../context/CartContext';
 import { useFavorites } from '../../context/FavoritesContext';
 import './ProductCard.css';
 
-const ProductCard = ({ 
-  product, 
-  onQuickView 
-}) => {
+const ProductCard = ({ product, onQuickView }) => {
   const { addToCart } = useCart();
   const { toggleFavorite, isFavorite } = useFavorites();
   
-  const [imageUrl, setImageUrl] = useState('/images/placeholder-flower.jpg');
+  const [imageUrl, setImageUrl] = useState('');
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const {
     id,
@@ -22,67 +21,136 @@ const ProductCard = ({
     images,
     description,
     category,
-    in_stock
+    in_stock,
+    type
   } = product;
 
-  // Обработка изображений из БД
-  useEffect(() => {
-    console.log('🔍 Product data from DB:', { 
-      id, 
-      name, 
-      images 
-    });
-
-    const processImageFromDB = () => {
-      try {
-        // Если images уже массив - используем первый элемент
-        if (Array.isArray(images)) {
-          return images[0] || '/images/placeholder-flower.jpg';
-        }
-        
-        // Если images - JSON строка, парсим её
-        if (typeof images === 'string') {
-          // Пробуем распарсить JSON
-          if (images.startsWith('[') || images.startsWith('"')) {
-            try {
-              const parsed = JSON.parse(images);
-              if (Array.isArray(parsed) && parsed.length > 0) {
-                return parsed[0];
-              }
-            } catch (e) {
-              console.log('❌ JSON parse failed, using as string:', images);
-              return images;
-            }
+  // Функция для получения первого изображения
+  const getFirstImage = () => {
+    if (!images) return null;
+    
+    try {
+      let imageArray = [];
+      
+      // Если images уже массив
+      if (Array.isArray(images)) {
+        imageArray = images;
+      } 
+      // Если images - JSON строка
+      else if (typeof images === 'string') {
+        try {
+          const parsed = JSON.parse(images);
+          if (Array.isArray(parsed)) {
+            imageArray = parsed;
+          } else {
+            imageArray = [parsed];
           }
-          // Если это обычная строка с путем
-          return images;
+        } catch (e) {
+          // Если это не JSON, используем как строку
+          if (images.trim() !== '') {
+            imageArray = [images];
+          }
+        }
+      }
+      
+      return imageArray.find(img => img && img.trim() !== '') || null;
+    } catch (error) {
+      console.error('Ошибка парсинга изображений:', error);
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    const loadImage = async () => {
+      try {
+        setLoading(true);
+        setImageError(false);
+        
+        const firstImage = getFirstImage();
+        
+        if (!firstImage) {
+          // Используем placeholder если нет изображений
+          setImageUrl(`https://images.unsplash.com/photo-1562690868-60bbe7293e94?w=400&h=600&fit=crop&auto=format&text=${encodeURIComponent(name)}`);
+          setImageLoaded(true);
+          setLoading(false);
+          return;
+        }
+
+        console.log('🖼️ Загрузка изображения для:', name, firstImage);
+        
+        // Для Unsplash изображений используем прямое подключение (они разрешают CORS)
+        if (firstImage.includes('unsplash.com')) {
+          setImageUrl(firstImage);
+          return;
         }
         
-        return '/images/placeholder-flower.jpg';
+        // Для других внешних URL используем прокси
+        if (firstImage.startsWith('http')) {
+          // Пробуем прямое подключение сначала
+          const testImage = new Image();
+          testImage.crossOrigin = 'anonymous';
+          
+          testImage.onload = () => {
+            console.log('✅ Прямое подключение удалось:', firstImage);
+            setImageUrl(firstImage);
+            setImageLoaded(true);
+            setLoading(false);
+          };
+          
+          testImage.onerror = () => {
+            console.log('🔄 Прямое подключение не удалось, используем прокси:', firstImage);
+            // Используем прокси
+            setImageUrl(`http://localhost:5000/api/images/proxy?url=${encodeURIComponent(firstImage)}`);
+          };
+          
+          testImage.src = firstImage;
+          return;
+        }
+        
+        // Для локальных путей
+        if (firstImage.startsWith('/')) {
+          setImageUrl(firstImage);
+          return;
+        }
+        
+        // Дефолтное изображение
+        setImageUrl(`https://images.unsplash.com/photo-1562690868-60bbe7293e94?w=400&h=600&fit=crop&auto=format&text=${encodeURIComponent(name)}`);
+        
       } catch (error) {
-        console.error('Error processing image:', error);
-        return '/images/placeholder-flower.jpg';
+        console.error('Ошибка загрузки изображения:', error);
+        setImageUrl(`https://images.unsplash.com/photo-1562690868-60bbe7293e94?w=400&h=600&fit=crop&auto=format&text=${encodeURIComponent(name)}`);
+        setImageError(true);
+      } finally {
+        setLoading(false);
       }
     };
 
-    const finalImage = processImageFromDB();
-    console.log('🖼️ Final image URL:', finalImage);
-    setImageUrl(finalImage);
-    setImageLoaded(false);
-  }, [product, images, id]);
+    loadImage();
+  }, [product, images, name]);
+
+  const handleImageError = (e) => {
+    console.error('❌ Ошибка в img теге:', imageUrl);
+    setImageError(true);
+    
+    // Пробуем загрузить placeholder
+    e.target.src = `https://images.unsplash.com/photo-1562690868-60bbe7293e94?w=400&h=600&fit=crop&auto=format&text=${encodeURIComponent(name)}`;
+  };
+
+  const handleImageLoad = () => {
+    console.log('✅ Изображение загружено:', imageUrl);
+    setImageLoaded(true);
+    setImageError(false);
+  };
 
   const isOnSale = original_price && original_price > price;
 
   const normalizePrice = (priceValue) => {
-    if (typeof priceValue === 'number') {
-      return priceValue;
-    }
-    
+    if (typeof priceValue === 'number') return priceValue;
     if (typeof priceValue === 'string') {
       const cleaned = priceValue.toString().replace(/\s/g, '').replace('₽', '');
-      return parseFloat(cleaned) || 0;
+      const parsed = parseFloat(cleaned);
+      return isNaN(parsed) ? 0 : parsed;
     }
-    
     return 0;
   };
 
@@ -96,15 +164,13 @@ const ProductCard = ({
       price: normalizePrice(price),
       image: imageUrl,
       description,
-      category: category?.name || category
+      category: category?.name || category,
+      type
     });
 
-    // Визуальная обратная связь
     const button = e.currentTarget;
     button.classList.add('added');
-    setTimeout(() => {
-      button.classList.remove('added');
-    }, 1000);
+    setTimeout(() => button.classList.remove('added'), 1000);
   };
 
   const handleToggleFavorite = (e) => {
@@ -115,9 +181,7 @@ const ProductCard = ({
     
     const heartBtn = e.currentTarget;
     heartBtn.classList.add('heart-animate');
-    setTimeout(() => {
-      heartBtn.classList.remove('heart-animate');
-    }, 600);
+    setTimeout(() => heartBtn.classList.remove('heart-animate'), 600);
   };
 
   const handleQuickView = (e) => {
@@ -131,14 +195,13 @@ const ProductCard = ({
     return new Intl.NumberFormat('ru-RU').format(normalized) + ' ₽';
   };
 
-  const handleImageError = (e) => {
-    console.error('❌ Image failed to load:', imageUrl);
-    e.target.src = '/images/placeholder-flower.jpg';
-  };
-
-  const handleImageLoad = () => {
-    console.log('✅ Image loaded successfully:', imageUrl);
-    setImageLoaded(true);
+  // Текст для placeholder
+  const getProductTypeText = () => {
+    switch (type) {
+      case 'plant': return 'растение';
+      case 'composition': return 'композиция';
+      default: return 'букет';
+    }
   };
 
   return (
@@ -152,8 +215,17 @@ const ProductCard = ({
               loading="lazy"
               onLoad={handleImageLoad}
               onError={handleImageError}
-              className={imageLoaded ? 'loaded' : 'loading'}
+              className={`product-image ${imageLoaded && !loading ? 'loaded' : 'loading'} ${imageError ? 'has-error' : ''}`}
+              crossOrigin="anonymous"
             />
+            
+            {/* Индикатор загрузки */}
+            {(loading || !imageLoaded) && !imageError && (
+              <div className="image-loading">
+                <div className="loading-spinner"></div>
+                <span>Загрузка...</span>
+              </div>
+            )}
             
             {/* Бейджи */}
             <div className="product-card__badges">
@@ -163,6 +235,12 @@ const ProductCard = ({
               {isOnSale && (
                 <span className="badge badge-sale">Скидка</span>
               )}
+              {imageError && (
+                <span className="badge badge-error">Загрузка фото</span>
+              )}
+              {type === 'plant' && (
+                <span className="badge badge-plant">Растение</span>
+              )}
             </div>
 
             {/* Действия */}
@@ -171,6 +249,7 @@ const ProductCard = ({
                 className={`favorite-btn ${isFavorite(id) ? 'active' : ''}`}
                 onClick={handleToggleFavorite}
                 title={isFavorite(id) ? "Удалить из избранного" : "Добавить в избранное"}
+                aria-label={isFavorite(id) ? "Удалить из избранного" : "Добавить в избранное"}
               >
                 <svg viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 21.35L10.55 20.03C5.4 15.36 2 12.28 2 8.5C2 5.42 4.42 3 7.5 3C9.24 3 10.91 3.81 12 5.09C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.42 22 8.5C22 12.28 18.6 15.36 13.45 20.04L12 21.35Z"/>
@@ -182,6 +261,7 @@ const ProductCard = ({
                   className="quick-view-btn"
                   onClick={handleQuickView}
                   title="Быстрый просмотр"
+                  aria-label="Быстрый просмотр"
                 >
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <path d="M1 12S5 4 12 4s11 8 11 8-4 8-11 8S1 12 1 12z" strokeWidth="2"/>
@@ -198,7 +278,7 @@ const ProductCard = ({
           <Link to={`/product/${id}`} className="product-card__text-link">
             <h3 className="product-card__name">{name}</h3>
             <p className="product-card__description">
-              {description || 'Красивый букет для особого момента'}
+              {description || `Красивый ${getProductTypeText()} для особого момента`}
             </p>
           </Link>
 
@@ -220,6 +300,7 @@ const ProductCard = ({
               onClick={handleAddToCart}
               disabled={!in_stock}
               data-product-id={id}
+              aria-label={`Добавить ${name} в корзину`}
             >
               {!in_stock ? 'Нет в наличии' : 'В корзину'}
             </button>

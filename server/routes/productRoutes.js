@@ -4,10 +4,11 @@ const productController = require('../controllers/productController');
 
 // Определяем маршруты
 router.get('/featured', productController.getFeaturedProducts);
-router.get('/bouquets', productController.getBouquets); // Этот маршрут
-router.get('/all', productController.getBouquets); // Альтернативный маршрут
-router.get('/test-db', productController.getTestProducts);
-router.get('/static', productController.getStaticProducts);
+router.get('/bouquets', productController.getBouquets);
+router.get('/plants', productController.getPlants);
+router.get('/compositions', productController.getCompositions);
+router.get('/all', productController.getAllProducts);
+router.post('/save', productController.createOrUpdateProduct);
 
 // Экспортируем router
 module.exports = router;

@@ -3,7 +3,8 @@ const cors = require('cors');
 const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes');
 const favoriteRoutes = require('./routes/favoriteRoutes');
-const cartRoutes = require('./routes/cartRoutes'); // Добавьте эту строку
+const cartRoutes = require('./routes/cartRoutes'); 
+const imageRoutes = require('./routes/imageRoutes');
 require('dotenv').config();
 
 const app = express();
@@ -15,7 +16,7 @@ app.use(cors({
     credentials: true
 }));
 app.use(express.json());
-
+app.use('/api/images', imageRoutes);
 // Логирование запросов
 app.use((req, res, next) => {
     console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
