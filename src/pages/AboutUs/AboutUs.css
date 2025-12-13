@@ -372,66 +372,212 @@
 }
 
 /* CTA секция */
+/* CTA секция - финальная версия с зеленым фоном */
 .about-cta {
-  padding: 100px 0;
-  background: linear-gradient(135deg, #8BC9A1 0%, #7AB890 100%);
-  text-align: center;
-  color: white;
+  padding: 80px 20px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.cta-content h2 {
+.about-cta-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.about-cta-content {
+  background: linear-gradient(135deg, #8BC9A1 0%, #7AB890 100%);
+  padding: 60px 40px;
+  border-radius: 25px;
+  text-align: center;
+  color: white;
+  box-shadow: 
+    0 20px 40px rgba(139, 201, 161, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Декоративный цветочный узор (опционально) */
+.about-cta-content::before {
+  content: '🌸🌺🌿🌷';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 4rem;
+  opacity: 0.1;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.about-cta-content h2 {
   font-family: 'Playfair Display', serif;
   font-size: 2.8rem;
   font-weight: 700;
   margin-bottom: 20px;
+  color: white;
+  position: relative;
+  z-index: 2;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.cta-content p {
-  font-size: 1.2rem;
+.about-cta-subtitle {
+  font-size: 1.25rem;
+  line-height: 1.6;
   margin-bottom: 40px;
+  color: rgba(255, 255, 255, 0.95);
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
-  opacity: 0.9;
-  line-height: 1.6;
+  position: relative;
+  z-index: 2;
+  font-weight: 400;
 }
 
-.cta-buttons {
+.about-cta-buttons {
   display: flex;
   gap: 20px;
   justify-content: center;
   flex-wrap: wrap;
+  position: relative;
+  z-index: 2;
 }
 
-.cta-button {
-  padding: 16px 32px;
+.about-cta-button {
+  padding: 16px 36px;
   border-radius: 30px;
   text-decoration: none;
   font-weight: 600;
   font-size: 1.1rem;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 180px;
+  text-align: center;
+  border: 2px solid transparent;
 }
 
-.cta-button.primary {
+.about-cta-button.primary {
   background: white;
   color: #2D5016;
-}
-
-.cta-button.primary:hover {
-  background: #f8f8f8;
-  transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
-.cta-button.secondary {
-  background: transparent;
-  color: white;
-  border: 2px solid white;
+.about-cta-button.primary:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+  background: #f8f9fa;
 }
 
-.cta-button.secondary:hover {
-  background: rgba(255, 255, 255, 0.1);
-  transform: translateY(-2px);
+.about-cta-button.secondary {
+  background: transparent;
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+}
+
+.about-cta-button.secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: white;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
+}
+
+/* Градиентная обводка (опционально) */
+.about-cta-content::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #8BC9A1, #7AB890, #6AA780, #8BC9A1);
+  border-radius: 27px;
+  z-index: -1;
+  opacity: 0.5;
+  filter: blur(4px);
+}
+
+/* Анимация для кнопок при наведении */
+.about-cta-button {
+  position: relative;
+  overflow: hidden;
+}
+
+.about-cta-button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.about-cta-button:hover::after {
+  width: 300px;
+  height: 300px;
+}
+
+/* Адаптивность */
+@media (max-width: 1024px) {
+  .about-cta-content {
+    padding: 50px 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .about-cta {
+    padding: 60px 15px;
+  }
+  
+  .about-cta-content {
+    padding: 40px 20px;
+    border-radius: 20px;
+  }
+  
+  .about-cta-content h2 {
+    font-size: 2.2rem;
+  }
+  
+  .about-cta-subtitle {
+    font-size: 1.1rem;
+  }
+  
+  .about-cta-buttons {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .about-cta-button {
+    width: 100%;
+    max-width: 280px;
+    padding: 14px 28px;
+  }
+  
+  .about-cta-content::before {
+    font-size: 3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-cta-content h2 {
+    font-size: 1.8rem;
+  }
+  
+  .about-cta-subtitle {
+    font-size: 1rem;
+  }
+  
+  .about-cta-content::before {
+    display: none;
+  }
+  
+  .about-cta-content::after {
+    display: none;
+  }
 }
 
 /* Адаптивность */

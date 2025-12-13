@@ -178,25 +178,26 @@ export default function AboutUs() {
       </section>
 
       {/* CTA секция */}
-      <section className="about-cta">
-        <div className="container">
-          <div className="cta-content">
-            <h2>Готовы создать что-то прекрасное вместе?</h2>
-            <p>
-              Обращайтесь к нам для создания идеального букета для любого события — 
-              от романтического свидания до корпоративного мероприятия.
-            </p>
-            <div className="cta-buttons">
-              <Link to="/" className="cta-button primary">
-                Смотреть каталог
-              </Link>
-              <Link to="/register" className="cta-button secondary">
-                Создать аккаунт
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+     {/* CTA секция - финальная версия */}
+<section className="about-cta">
+  <div className="about-cta-container">
+    <div className="about-cta-content">
+      <h2>Готовы создать что-то прекрасное вместе?</h2>
+      <p className="about-cta-subtitle">
+        Обращайтесь к нам для создания идеального букета для любого события — 
+        от романтического свидания до корпоративного мероприятия.
+      </p>
+      <div className="about-cta-buttons">
+        <Link to="/bouquets" className="about-cta-button primary">
+          Смотреть каталог
+        </Link>
+        <Link to="/custom" className="about-cta-button secondary">
+          Заказать дизайн
+        </Link>
+      </div>
+    </div>
+  </div>
+</section>
     </div>
   );
 }
