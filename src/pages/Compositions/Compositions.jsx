@@ -1,163 +1,154 @@
-import React, { useState, useMemo } from 'react';
-import { Link } from 'react-router-dom';
-import { useCart } from '../../context/CartContext';
-import { useFavorites } from '../../context/FavoritesContext';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import ProductCard from '../../components/ProductCard/ProductCard';
 import './Compositions.css';
 
-const allCompositions = [
-  {
-    id: 1,
-    name: "Осенняя гармония",
-    price: "4 200 ₽",
-    description: "Композиция из сухоцветов, роз и ягод в деревянном ящике",
-    image: "https://cdn-sh1.vigbo.com/shops/158573/products/22160120/images/3-3aa42ee4f3639c9978400966c0cf391d.jpg",
-    category: "seasonal",
-    style: "rustic",
-    size: "medium",
-    tags: ["сухоцветы", "осень", "деревянный ящик", "ягоды"]
-  },
-  {
-    id: 2,
-    name: "Свадебная элегантность", 
-    price: "5 800 ₽",
-    description: "Белоснежная композиция с орхидеями и розами для торжества",
-    image: "https://allflow.ru/wa-data/public/shop/products/87/03/387/images/515/515.970.jpg",
-    category: "wedding",
-    style: "elegant",
-    size: "large",
-    tags: ["орхидеи", "белые розы", "свадьба", "торжество"]
-  },
-  {
-    id: 3,
-    name: "Весеннее пробуждение",
-    price: "3 900 ₽",
-    description: "Свежая композиция с тюльпанами, гиацинтами и ветками",
-    image: "https://роза-мимоза.рф/image/cache/catalog/product/010/p206_1551168531_44760-1000x1000.jpg",
-    category: "seasonal",
-    style: "natural",
-    size: "medium",
-    tags: ["тюльпаны", "гиацинты", "весна", "свежесть"]
-  },
-  {
-    id: 4,
-    name: "Минимализм в стекле",
-    price: "3 500 ₽", 
-    description: "Лаконичная композиция с эвкалиптом в стеклянной вазе",
-    image: "https://www.bloomr.com/cdn/shop/files/26922-90-1.jpg?v=1736245596",
-    category: "modern",
-    style: "minimalist",
-    size: "small",
-    tags: ["эвкалипт", "минимализм", "стекло"]
-  },
-  {
-    id: 5,
-    name: "Тропический рай",
-    price: "6 200 ₽",
-    description: "Экзотическая композиция с антуриумами и папоротником",
-    image: "https://flowmagic.ru/wa-data/public/shop/products/50/09/950/images/1753/1753.750.jpg",
-    category: "exotic",
-    style: "tropical",
-    size: "large",
-    tags: ["антуриумы", "папоротник", "тропики", "экзотика"]
-  },
-  {
-    id: 6,
-    name: "Романтический шепот",
-    price: "4 800 ₽",
-    description: "Нежная композиция с пионами и гортензиями в пастельных тонах",
-    image: "https://letoflowers.ru/upload/resize_cache/iblock/72f/1396_1396_1/qvrgjr35r456v202saox32faa30zknxj.jpeg",
-    category: "romantic",
-    style: "elegant",
-    size: "medium",
-    tags: ["пионы", "гортензии", "романтика", "пастель"]
-  }
-];
-
 const categories = [
-  { id: 'all', name: 'Все композиции', count: allCompositions.length },
-  { id: 'seasonal', name: 'Сезонные', count: allCompositions.filter(c => c.category === 'seasonal').length },
-  { id: 'wedding', name: 'Свадебные', count: allCompositions.filter(c => c.category === 'wedding').length },
-  { id: 'modern', name: 'Современные', count: allCompositions.filter(c => c.category === 'modern').length },
-  { id: 'romantic', name: 'Романтические', count: allCompositions.filter(c => c.category === 'romantic').length },
-  { id: 'exotic', name: 'Экзотические', count: allCompositions.filter(c => c.category === 'exotic').length },
-  { id: 'natural', name: 'Природные', count: allCompositions.filter(c => c.category === 'natural').length },
-  { id: 'thematic', name: 'Тематические', count: allCompositions.filter(c => c.category === 'thematic').length },
-  { id: 'vintage', name: 'Винтажные', count: allCompositions.filter(c => c.category === 'vintage').length },
-  { id: 'celebration', name: 'Праздничные', count: allCompositions.filter(c => c.category === 'celebration').length }
-];
-
-const styles = [
-  { id: 'all', name: 'Все стили' },
-  { id: 'elegant', name: 'Элегантный' },
-  { id: 'rustic', name: 'Деревенский' },
-  { id: 'minimalist', name: 'Минимализм' },
-  { id: 'tropical', name: 'Тропический' },
-  { id: 'natural', name: 'Природный' },
-  { id: 'urban', name: 'Урбанистический' },
-  { id: 'luxury', name: 'Роскошный' },
-  { id: 'oriental', name: 'Восточный' },
-  { id: 'classic', name: 'Классический' }
-];
-
-const sizes = [
-  { id: 'all', name: 'Любой размер' },
-  { id: 'small', name: 'Маленький' },
-  { id: 'medium', name: 'Средний' },
-  { id: 'large', name: 'Большой' }
+  { id: 'all', name: 'Все композиции', dbField: null },
+  { id: 'seasonal', name: 'Сезонные', dbField: 'seasonal' },
+  { id: 'wedding', name: 'Свадебные', dbField: 'wedding' },
+  { id: 'modern', name: 'Современные', dbField: 'modern' },
+  { id: 'romantic', name: 'Романтические', dbField: 'romantic' },
+  { id: 'exotic', name: 'Экзотические', dbField: 'exotic' },
+  { id: 'minimalist', name: 'Минимализм', dbField: 'minimalist' },
+  { id: 'thematic', name: 'Тематические', dbField: 'thematic' },
+  { id: 'celebration', name: 'Праздничные', dbField: 'celebration' }
 ];
 
 const priceRanges = [
   { id: 'all', name: 'Любая цена', min: 0, max: Infinity },
   { id: 'budget', name: 'До 4 000 ₽', min: 0, max: 4000 },
-  { id: 'medium', name: '4 000 - 5 000 ₽', min: 4000, max: 5000 },
-  { id: 'premium', name: 'От 5 000 ₽', min: 5000, max: Infinity }
+  { id: 'medium', name: '4 000 - 6 000 ₽', min: 4000, max: 6000 },
+  { id: 'premium', name: 'От 6 000 ₽', min: 6000, max: Infinity }
+];
+
+const sortOptions = [
+  { id: 'default', name: 'По умолчанию' },
+  { id: 'price-asc', name: 'Сначала дешевле' },
+  { id: 'price-desc', name: 'Сначала дороже' },
+  { id: 'name', name: 'По названию' }
 ];
 
 export default function Compositions() {
-  const { addToCart } = useCart();
-  const { toggleFavorite, isFavorite } = useFavorites();
+  const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [selectedStyle, setSelectedStyle] = useState('all');
-  const [selectedSize, setSelectedSize] = useState('all');
   const [selectedPrice, setSelectedPrice] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('default');
+  const [searchTimeout, setSearchTimeout] = useState(null);
+  const [isSearching, setIsSearching] = useState(false);
 
-  const filteredCompositions = useMemo(() => {
-    let filtered = allCompositions;
+  // Дебаунс для поиска
+  const handleSearchChange = useCallback((value) => {
+    setSearchQuery(value);
+    setIsSearching(true);
+    
+    if (searchTimeout) {
+      clearTimeout(searchTimeout);
+    }
+    
+    const timeout = setTimeout(() => {
+      setIsSearching(false);
+    }, 500);
+    
+    setSearchTimeout(timeout);
+  }, [searchTimeout]);
+
+  // Очистка поиска
+  const handleClearSearch = useCallback(() => {
+    setSearchQuery('');
+    setIsSearching(false);
+    if (searchTimeout) {
+      clearTimeout(searchTimeout);
+    }
+  }, [searchTimeout]);
+
+  // Загрузка композиций из БД
+  useEffect(() => {
+    const fetchCompositions = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const response = await fetch('http://localhost:5000/api/products/compositions');
+        
+        if (!response.ok) {
+          throw new Error(`Ошибка сервера: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          // Добавляем дополнительную информацию для композиций
+          const compositions = result.data.map(product => ({
+            ...product,
+            isComposition: true, // Флаг для отличия от букетов
+            typeLabel: 'Композиция'
+          }));
+          
+          setProducts(compositions);
+        } else {
+          throw new Error(result.message || 'Ошибка при загрузке композиций');
+        }
+      } catch (error) {
+        setError(error.message);
+        setProducts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCompositions();
+  }, []);
+
+  // Фильтрация и сортировка
+  useEffect(() => {
+    if (!products.length) {
+      setFilteredProducts([]);
+      return;
+    }
+
+    let filtered = [...products];
 
     // Фильтрация по категории
     if (selectedCategory !== 'all') {
-      filtered = filtered.filter(comp => comp.category === selectedCategory);
-    }
-
-    // Фильтрация по стилю
-    if (selectedStyle !== 'all') {
-      filtered = filtered.filter(comp => comp.style === selectedStyle);
-    }
-
-    // Фильтрация по размеру
-    if (selectedSize !== 'all') {
-      filtered = filtered.filter(comp => comp.size === selectedSize);
+      const selectedCat = categories.find(cat => cat.id === selectedCategory);
+      if (selectedCat && selectedCat.dbField) {
+        filtered = filtered.filter(product => {
+          const categorySlug = product.category?.slug;
+          const categoryName = product.category?.name?.toLowerCase();
+          const productType = product.type;
+          
+          return (
+            categorySlug === selectedCat.id ||
+            categoryName === selectedCat.dbField ||
+            (selectedCat.dbField === 'exotic' && categoryName?.includes('экзотич')) ||
+            (selectedCat.dbField === 'minimalist' && categoryName?.includes('минимал'))
+          );
+        });
+      }
     }
 
     // Фильтрация по цене
     if (selectedPrice !== 'all') {
       const priceRange = priceRanges.find(range => range.id === selectedPrice);
-      filtered = filtered.filter(comp => {
-        const price = parseInt(comp.price.replace(/\s/g, '').replace('₽', ''));
-        return price >= priceRange.min && price <= priceRange.max;
+      filtered = filtered.filter(product => {
+        const productPrice = typeof product.price === 'number' ? product.price : 
+                            parseFloat(product.price) || 0;
+        return productPrice >= priceRange.min && productPrice <= priceRange.max;
       });
     }
 
-    // Поиск по названию и тегам
-    if (searchQuery) {
+    // Поиск по названию и описанию
+    if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(comp => 
-        comp.name.toLowerCase().includes(query) ||
-        comp.description.toLowerCase().includes(query) ||
-        comp.tags.some(tag => tag.toLowerCase().includes(query))
+      filtered = filtered.filter(product => 
+        product.name?.toLowerCase().includes(query) ||
+        product.description?.toLowerCase().includes(query) ||
+        product.category?.name?.toLowerCase().includes(query)
       );
     }
 
@@ -165,232 +156,214 @@ export default function Compositions() {
     switch (sortBy) {
       case 'price-asc':
         filtered.sort((a, b) => {
-          const priceA = parseInt(a.price.replace(/\s/g, '').replace('₽', ''));
-          const priceB = parseInt(b.price.replace(/\s/g, '').replace('₽', ''));
+          const priceA = typeof a.price === 'number' ? a.price : parseFloat(a.price) || 0;
+          const priceB = typeof b.price === 'number' ? b.price : parseFloat(b.price) || 0;
           return priceA - priceB;
         });
         break;
       case 'price-desc':
         filtered.sort((a, b) => {
-          const priceA = parseInt(a.price.replace(/\s/g, '').replace('₽', ''));
-          const priceB = parseInt(b.price.replace(/\s/g, '').replace('₽', ''));
+          const priceA = typeof a.price === 'number' ? a.price : parseFloat(a.price) || 0;
+          const priceB = typeof b.price === 'number' ? b.price : parseFloat(b.price) || 0;
           return priceB - priceA;
         });
         break;
       case 'name':
-        filtered.sort((a, b) => a.name.localeCompare(b.name));
+        filtered.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
         break;
       default:
-        // Оставляем исходный порядок
+        // Сортировка по дате создания (новые первыми)
+        filtered.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
         break;
     }
 
-    return filtered;
-  }, [selectedCategory, selectedStyle, selectedSize, selectedPrice, searchQuery, sortBy]);
+    setFilteredProducts(filtered);
+  }, [products, selectedCategory, selectedPrice, searchQuery, sortBy]);
 
-  const handleAddToCart = (composition) => {
-    const price = parseInt(composition.price.replace(/\s/g, '').replace('₽', ''));
-    
-    addToCart({
-      id: composition.id,
-      name: composition.name,
-      price: price,
-      image: composition.image,
-      description: composition.description,
-      category: 'composition'
-    });
-
-    // Визуальная обратная связь
-    const button = document.querySelector(`[data-composition-id="${composition.id}"]`);
-    if (button) {
-      button.classList.add('added');
-      setTimeout(() => {
-        button.classList.remove('added');
-      }, 1000);
-    }
-  };
-
-  const handleToggleFavorite = (composition, e) => {
-    e.stopPropagation();
-    toggleFavorite(composition);
-    
-    const heartBtn = e.currentTarget;
-    heartBtn.classList.add('heart-animate');
-    setTimeout(() => {
-      heartBtn.classList.remove('heart-animate');
-    }, 600);
-  };
-
-  const clearFilters = () => {
+  const clearFilters = useCallback(() => {
     setSelectedCategory('all');
-    setSelectedStyle('all');
-    setSelectedSize('all');
     setSelectedPrice('all');
     setSearchQuery('');
     setSortBy('default');
+    setIsSearching(false);
+    if (searchTimeout) {
+      clearTimeout(searchTimeout);
+    }
+  }, [searchTimeout]);
+
+  const handleQuickView = (product) => {
+    // Реализация быстрого просмотра
+    console.log('Быстрый просмотр композиции:', product);
+    alert(`Быстрый просмотр: ${product.name}\nЦена: ${product.price} ₽\nТип: Композиция`);
   };
 
-  const getSizeIcon = (size) => {
-    switch (size) {
-      case 'small': return '🟢';
-      case 'medium': return '🟡';
-      case 'large': return '🔴';
-      default: return '';
-    }
+  const getDisplayedProductsCount = () => {
+    if (loading) return 'Загрузка...';
+    if (error) return `Ошибка: ${error}`;
+    return `Найдено ${filteredProducts.length} композиций`;
   };
 
-  const getStyleIcon = (style) => {
-    switch (style) {
-      case 'elegant': return '💎';
-      case 'rustic': return '🌾';
-      case 'minimalist': return '⬜';
-      case 'tropical': return '🌴';
-      case 'natural': return '🌿';
-      case 'urban': return '🏙️';
-      case 'luxury': return '👑';
-      case 'oriental': return '🎎';
-      case 'classic': return '🏛️';
-      default: return '';
-    }
+  const getActiveFiltersCount = () => {
+    return [
+      selectedCategory !== 'all',
+      selectedPrice !== 'all',
+      !!searchQuery,
+      sortBy !== 'default'
+    ].filter(Boolean).length;
   };
 
   return (
     <div className="compositions-page">
       <div className="container">
-        {/* Hero секция */}
+        {/* Hero секция с баннером */}
         <section className="compositions-hero">
           <div className="compositions-hero-content">
-            <h1>Флористические композиции</h1>
-            <p>Уникальные работы наших флористов для особых моментов</p>
-            <div className="hero-features">
-              <div className="feature">
-                <span className="feature-icon">🎨</span>
-                <span className="feature-text">Индивидуальный дизайн</span>
-              </div>
-              <div className="feature">
-                <span className="feature-icon">💐</span>
-                <span className="feature-text">Свежие цветы</span>
-              </div>
-              <div className="feature">
-                <span className="feature-icon">🚚</span>
-                <span className="feature-text">Бережная доставка</span>
-              </div>
+            <div className="hero-decoration">
+              <div className="flower-decoration">🎨</div>
+              <h1>Каталог композиций</h1>
+              <div className="flower-decoration">🖼️</div>
+            </div>
+            <p>Уникальные флористические работы для украшения интерьера и особых моментов</p>
+          </div>
+          <div className="hero-wave">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+              <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" fill="currentColor"></path>
+              <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" fill="currentColor"></path>
+              <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" fill="currentColor"></path>
+            </svg>
+          </div>
+        </section>
+
+        {/* Поиск */}
+        <section className="search-section">
+          <div className="search-container">
+            <div className="search-input-group">
+              <input
+                type="text"
+                placeholder="Поиск композиций по названию или описанию..."
+                value={searchQuery}
+                onChange={(e) => handleSearchChange(e.target.value)}
+                className="search-input"
+                aria-label="Поиск композиций"
+              />
+              {searchQuery && (
+                <button 
+                  className="search-clear-btn"
+                  onClick={handleClearSearch}
+                  aria-label="Очистить поиск"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              )}
+              {isSearching && (
+                <div className="search-spinner"></div>
+              )}
             </div>
           </div>
         </section>
 
         {/* Фильтры и поиск */}
         <section className="compositions-filters">
-          <div className="filters-header">
-            <h2>Подберите идеальную композицию</h2>
-            <p>Используйте фильтры для точного поиска</p>
-          </div>
-
           <div className="filters-grid">
-            {/* Поиск */}
-            <div className="search-box">
-              <input
-                type="text"
-                placeholder="Поиск по названию, описанию или тегам..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="search-input"
-              />
-              <span className="search-icon">🔍</span>
+            {/* Категории */}
+            <div className="filter-group">
+              <label className="filter-label">Категория</label>
+              <div className="category-filters">
+                {categories.map(category => (
+                  <button
+                    key={category.id}
+                    className={`category-filter ${selectedCategory === category.id ? 'active' : ''}`}
+                    onClick={() => setSelectedCategory(category.id)}
+                    aria-pressed={selectedCategory === category.id}
+                  >
+                    <span className="category-name">{category.name}</span>
+                    <span className="category-dot"></span>
+                  </button>
+                ))}
+              </div>
             </div>
 
-            {/* Основные фильтры */}
-            <div className="main-filters">
-              <div className="filter-group">
-                <label className="filter-label">Категория</label>
-                <select 
-                  value={selectedCategory}
-                  onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="filter-select"
-                >
-                  {categories.map(category => (
-                    <option key={category.id} value={category.id}>
-                      {category.name} ({category.count})
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="filter-group">
-                <label className="filter-label">Стиль</label>
-                <select 
-                  value={selectedStyle}
-                  onChange={(e) => setSelectedStyle(e.target.value)}
-                  className="filter-select"
-                >
-                  {styles.map(style => (
-                    <option key={style.id} value={style.id}>
-                      {style.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="filter-group">
-                <label className="filter-label">Размер</label>
-                <select 
-                  value={selectedSize}
-                  onChange={(e) => setSelectedSize(e.target.value)}
-                  className="filter-select"
-                >
-                  {sizes.map(size => (
-                    <option key={size.id} value={size.id}>
-                      {size.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="filter-group">
-                <label className="filter-label">Цена</label>
-                <select 
-                  value={selectedPrice}
-                  onChange={(e) => setSelectedPrice(e.target.value)}
-                  className="filter-select"
-                >
+            {/* Цена и сортировка */}
+            <div className="filter-row">
+              <div className="filter-group price-group">
+                <label className="filter-label">Ценовой диапазон</label>
+                <div className="price-options">
                   {priceRanges.map(range => (
-                    <option key={range.id} value={range.id}>
+                    <button
+                      key={range.id}
+                      className={`price-option ${selectedPrice === range.id ? 'active' : ''}`}
+                      onClick={() => setSelectedPrice(range.id)}
+                      aria-pressed={selectedPrice === range.id}
+                    >
                       {range.name}
-                    </option>
+                    </button>
                   ))}
-                </select>
+                </div>
               </div>
-            </div>
 
-            {/* Сортировка и сброс */}
-            <div className="filter-actions">
               <div className="filter-group">
                 <label className="filter-label">Сортировка</label>
-                <select 
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="filter-select"
-                >
-                  <option value="default">По умолчанию</option>
-                  <option value="name">По названию</option>
-                  <option value="price-asc">По цене (сначала дешевые)</option>
-                  <option value="price-desc">По цене (сначала дорогие)</option>
-                </select>
+                <div className="sort-options">
+                  <button 
+                    className={`sort-option ${sortBy === 'default' ? 'active' : ''}`}
+                    onClick={() => setSortBy('default')}
+                    aria-pressed={sortBy === 'default'}
+                  >
+                    По умолчанию
+                  </button>
+                  <button 
+                    className={`sort-option ${sortBy === 'price-asc' ? 'active' : ''}`}
+                    onClick={() => setSortBy('price-asc')}
+                    aria-pressed={sortBy === 'price-asc'}
+                  >
+                    По цене ↑
+                  </button>
+                  <button 
+                    className={`sort-option ${sortBy === 'price-desc' ? 'active' : ''}`}
+                    onClick={() => setSortBy('price-desc')}
+                    aria-pressed={sortBy === 'price-desc'}
+                  >
+                    По цене ↓
+                  </button>
+                  <button 
+                    className={`sort-option ${sortBy === 'name' ? 'active' : ''}`}
+                    onClick={() => setSortBy('name')}
+                    aria-pressed={sortBy === 'name'}
+                  >
+                    По названию
+                  </button>
+                </div>
               </div>
 
               <button 
                 className="clear-filters-btn"
                 onClick={clearFilters}
+                disabled={getActiveFiltersCount() === 0}
               >
-                Сбросить все фильтры
+                <span className="clear-icon">↻</span>
+                Сбросить все
               </button>
             </div>
           </div>
 
           {/* Результаты фильтрации */}
           <div className="filter-results">
-            <p>Найдено композиций: <strong>{filteredCompositions.length}</strong></p>
-            {(selectedCategory !== 'all' || selectedStyle !== 'all' || selectedSize !== 'all' || selectedPrice !== 'all' || searchQuery) && (
+            <div className="results-info">
+              <p className="results-count">
+                {getDisplayedProductsCount()}
+                {!loading && !error && products.length > 0 && filteredProducts.length === 0 && (
+                  <span className="no-match"> (ничего не соответствует фильтрам)</span>
+                )}
+              </p>
+              {searchQuery && (
+                <p className="search-query">
+                  По запросу: "<strong>{searchQuery}</strong>"
+                </p>
+              )}
+            </div>
+            {getActiveFiltersCount() > 0 && (
               <button 
                 className="clear-filters-mobile"
                 onClick={clearFilters}
@@ -401,9 +374,26 @@ export default function Compositions() {
           </div>
         </section>
 
-        {/* Сетка композиций */}
+        {/* Сетка товаров */}
         <section className="compositions-grid-section">
-          {filteredCompositions.length === 0 ? (
+          {loading ? (
+            <div className="loading-container">
+              <div className="loading-spinner"></div>
+              <p>Загружаем композиции...</p>
+            </div>
+          ) : error ? (
+            <div className="error-container">
+              <div className="error-icon">❌</div>
+              <h3>Ошибка загрузки</h3>
+              <p>{error}</p>
+              <button 
+                className="cta-button primary"
+                onClick={() => window.location.reload()}
+              >
+                Попробовать снова
+              </button>
+            </div>
+          ) : filteredProducts.length === 0 ? (
             <div className="no-results">
               <div className="no-results-icon">🎨</div>
               <h3>Композиции не найдены</h3>
@@ -416,64 +406,19 @@ export default function Compositions() {
               </button>
             </div>
           ) : (
-            <div className="compositions-grid">
-              {filteredCompositions.map((composition) => (
-                <div key={composition.id} className="composition-card">
-                  <div className="composition-image">
-                    <img 
-                      src={composition.image} 
-                      alt={composition.name}
-                      loading="lazy"
-                      onError={(e) => {
-                        e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDMwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjhGN0Y3Ii8+CjxwYXRoIGQ9Ik0xNTAgODBDMTMwIDgwIDExNCA5NiAxMTQgMTE2QzExNCAxMzYgMTMwIDE1MiAxNTAgMTUyQzE3MCAxNTIgMTg2IDEzNiAxODYgMTE2QzE4NiA5NiAxNzAgODAgMTUwIDgwWiIgZmlsbD0iIzhCQzlBMSIvPgo8cGF0aCBkPSJNMTcwIDE0MEMxNjAgMTUwIDE0MCAxNTAgMTMwIDE0MEMxMjAgMTMwIDEyMCAxMTAgMTMwIDEwMEMxNDAgOTAgMTYwIDkwIDE3MCAxMDBDMTgwIDExMCAxODAgMTMwIDE3MCAxNDBaIiBmaWxsPSIjQzdBN0U3Ii8+CjxwYXRoIGQ9Ik0xNDAgMTYwTDE0MCAyMjBMMTYwIDIyMEwxNjAgMTYwIiBmaWxsPSIjODhDQThBIi8+Cjwvc3ZnPgo=';
-                      }}
-                    />
-                    <button 
-                      className={`favorite-heart ${isFavorite(composition.id) ? 'active' : ''}`}
-                      onClick={(e) => handleToggleFavorite(composition, e)}
-                      title={isFavorite(composition.id) ? "Удалить из избранного" : "Добавить в избранное"}
-                    >
-                      <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 21.35L10.55 20.03C5.4 15.36 2 12.28 2 8.5C2 5.42 4.42 3 7.5 3C9.24 3 10.91 3.81 12 5.09C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.42 22 8.5C22 12.28 18.6 15.36 13.45 20.04L12 21.35Z"/>
-                      </svg>
-                    </button>
-                    <div className="composition-badges">
-                      <span className="composition-badge category">{composition.category}</span>
-                      <span className="composition-badge size">
-                        {getSizeIcon(composition.size)} {composition.size}
-                      </span>
-                    </div>
-                  </div>
-                  
-                  <div className="composition-info">
-                    <div className="composition-header">
-                      <h3 className="composition-name">{composition.name}</h3>
-                      <span className="composition-style">
-                        {getStyleIcon(composition.style)} {composition.style}
-                      </span>
-                    </div>
-                    <p className="composition-description">{composition.description}</p>
-                    <div className="composition-tags">
-                      {composition.tags.map((tag, index) => (
-                        <span key={index} className="composition-tag">#{tag}</span>
-                      ))}
-                    </div>
-                    <div className="composition-footer">
-                      <span className="composition-price">{composition.price}</span>
-                      <button 
-                        className="composition-add-to-cart"
-                        onClick={() => handleAddToCart(composition)}
-                        data-composition-id={composition.id}
-                      >
-                        <span>В корзину</span>
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                          <path d="M4 8H12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                          <path d="M8 4V12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
-                </div>
+            <div className="products-grid">
+              {filteredProducts.map((product, index) => (
+                <ProductCard
+                  key={product.id}
+                  product={{
+                    ...product,
+                    typeLabel: 'Композиция',
+                    badgeType: 'composition'
+                  }}
+                  index={index}
+                  onQuickView={handleQuickView}
+                  showTypeBadge={true}
+                />
               ))}
             </div>
           )}
@@ -485,12 +430,12 @@ export default function Compositions() {
             <h2>Хотите уникальную композицию?</h2>
             <p>Наши флористы создадут эксклюзивную работу специально для вас</p>
             <div className="cta-buttons">
-              <Link to="/custom-composition" className="cta-button primary">
-  Заказать индивидуальную композицию
-</Link>
-              <Link to="/consultation" className="cta-button secondary">
-                Получить консультацию
-              </Link>
+              <a href="/custom-composition" className="cta-button primary">
+                Заказать индивидуальный дизайн
+              </a>
+              <a href="/consultation" className="cta-button secondary">
+                Получить консультацию флориста
+              </a>
             </div>
           </div>
         </section>
