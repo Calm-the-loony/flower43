@@ -1,17 +1,14 @@
 const pool = require('../config/db');
 
-// Общая функция для обработки изображений
 const processImages = (images) => {
   if (!images) return ['/images/placeholder-flower.jpg'];
   
   try {
     if (Array.isArray(images)) {
-      // Если уже массив - возвращаем как есть
       return images.length > 0 ? images : ['/images/placeholder-flower.jpg'];
     }
     
     if (typeof images === 'string') {
-      // Пробуем распарсить JSON
       try {
         const parsed = JSON.parse(images);
         if (Array.isArray(parsed) && parsed.length > 0) {
@@ -20,7 +17,6 @@ const processImages = (images) => {
           return [parsed];
         }
       } catch (parseError) {
-        // Если не JSON, но строка не пустая
         if (images.trim() !== '') {
           return [images];
         }
@@ -34,7 +30,6 @@ const processImages = (images) => {
   }
 };
 
-// Функция для получения продуктов с фильтрацией
 const getProductsByType = async (type = null) => {
   try {
     let query = `
@@ -92,7 +87,6 @@ const getProductsByType = async (type = null) => {
   }
 };
 
-// Получить только букеты (type = 'bouquet')
 const getBouquets = async (req, res) => {
   try {
     console.log('💐 Получение букетов из БД...');
@@ -114,7 +108,6 @@ const getBouquets = async (req, res) => {
   }
 };
 
-// Получить только растения (type = 'plant')
 const getPlants = async (req, res) => {
   try {
     console.log('🌿 Получение растений из БД...');
@@ -136,7 +129,6 @@ const getPlants = async (req, res) => {
   }
 };
 
-// Получить только композиции (type = 'composition')
 const getCompositions = async (req, res) => {
   try {
     console.log('🎨 Получение композиций из БД...');
@@ -158,7 +150,6 @@ const getCompositions = async (req, res) => {
   }
 };
 
-// Получить все товары (для каталога)
 const getAllProducts = async (req, res) => {
   try {
     console.log('📦 Получение всех товаров из БД...');
@@ -180,7 +171,6 @@ const getAllProducts = async (req, res) => {
   }
 };
 
-// Получить featured товары
 const getFeaturedProducts = async (req, res) => {
   try {
     console.log('⭐ Получение featured товаров...');
@@ -237,7 +227,6 @@ const getFeaturedProducts = async (req, res) => {
   }
 };
 
-// Создать/обновить продукт с URL изображений
 const createOrUpdateProduct = async (req, res) => {
   try {
     const {
@@ -245,20 +234,17 @@ const createOrUpdateProduct = async (req, res) => {
       price,
       original_price,
       description,
-      images, // Массив URL изображений
+      images,
       category_id,
       type = 'bouquet',
       in_stock = true,
       is_customizable = false
     } = req.body;
 
-    // Проверяем и обрабатываем изображения
     let imagesToStore = null;
     if (images && Array.isArray(images) && images.length > 0) {
-      // Фильтруем только валидные URL
       const validImages = images.filter(img => {
         if (typeof img === 'string' && img.trim() !== '') {
-          // Проверяем, что это URL или путь
           return img.startsWith('http') || img.startsWith('/') || img.startsWith('data:image');
         }
         return false;

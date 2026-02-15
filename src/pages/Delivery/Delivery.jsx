@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Delivery.css';
 
-// SVG-иконки в едином стиле
 const Icons = {
   truck: (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
@@ -84,7 +83,7 @@ export default function Delivery() {
   const deliveryZones = [
     { zone: 'Центр города', time: '1–2 часа', price: 'Бесплатно', minOrder: '1 500 ₽' },
     { zone: 'Северный, Западный', time: '2–3 часа', price: '200 ₽', minOrder: '1 500 ₽' },
-    { zone: 'Восточный, Александровка', time: '2–3 часа', price: '250 ₽', minOrder: '1 800 ₽' },
+    { zone: 'Александровка', time: '2–3 часа', price: '250 ₽', minOrder: '1 800 ₽' },
     { zone: 'Нахичевань, ЗЖМ', time: '2–3 часа', price: '200 ₽', minOrder: '1 500 ₽' }
   ];
 
@@ -208,10 +207,23 @@ export default function Delivery() {
         </div>
       </section>
 
-      {/* Зоны по Ростову */}
-      <section className="delivery-zones">
-        <div className="container">
-          <h2>Зоны доставки по Ростову</h2>
+      {/* Зоны доставки по Ростову (переработанный раздел) */}
+<section className="delivery-zones">
+  <div className="container">
+    <h2>Зоны доставки по Ростову</h2>
+    
+    <div className="zones-container">
+      {/* Визуализация зон на карте */}
+      <div className="zones-visual">
+        <div className="city-center-map">
+          <div className="map-zone">Центр</div>
+          <div className="map-zone">Северный</div>
+          <div className="map-zone">Александровка</div>
+          <div className="map-zone">ЗЖМ</div>
+        </div>
+        
+        <div className="zone-list">
+          <h3>Все районы города</h3>
           <div className="zones-grid">
             {deliveryZones.map((zone, i) => (
               <div key={i} className="zone-card">
@@ -221,19 +233,31 @@ export default function Delivery() {
                 </div>
                 <div className="zone-details">
                   <div className="detail">
-                    <span className="detail-label">Время:</span>
+                    <span className="detail-label">Время доставки</span>
                     <span className="detail-value">{zone.time}</span>
                   </div>
                   <div className="detail">
-                    <span className="detail-label">Мин. заказ:</span>
+                    <span className="detail-label">Минимальный заказ</span>
                     <span className="detail-value">{zone.minOrder}</span>
+                  </div>
+                  <div className="detail">
+                    <span className="detail-label">Доставка</span>
+                    <span className="detail-value">{zone.time === '1–2 часа' ? 'Быстрая' : 'Стандартная'}</span>
                   </div>
                 </div>
               </div>
             ))}
           </div>
         </div>
-      </section>
+      </div>
+      
+      <p className="zone-note">
+        * Бесплатная доставка действует при заказе от 1 500 ₽ в пределах центра города. 
+        При заказе в другие районы стоимость доставки фиксированная и не зависит от суммы заказа.
+      </p>
+    </div>
+  </div>
+</section>
 
       {/* Как это работает */}
       <section className="how-it-works">
@@ -312,8 +336,6 @@ export default function Delivery() {
           </div>
         </div>
       </section>
-
-      {/* CTA — в стиле страницы "О нас" */}
       <section className="delivery-cta-harmonized">
         <div className="delivery-cta-container">
           <div className="delivery-cta-content">

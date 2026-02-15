@@ -115,7 +115,7 @@ export const AuthProvider = ({ children }) => {
   const updateUser = (updatedUserData) => {
     const mergedUser = { ...user, ...updatedUserData };
     setUser(mergedUser);
-    // Здесь можно добавить запрос к API для обновления данных на сервере
+
   };
 
   const value = {

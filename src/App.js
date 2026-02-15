@@ -22,16 +22,12 @@ import Plants from './pages/Plants/Plants';
 import Compositions from './pages/Compositions/Compositions';
 import CustomBouquet from './pages/CustomBouquet/CustomBouquet';
 import Consultation from './pages/Consultation/Consultation';
-
-// Импортируем страницы ошибок
 import NotFound from './pages/ErrorPages/NotFound';
 import ServerError from './pages/ErrorPages/ServerError';
 import AccessDenied from './pages/ErrorPages/AccessDenied';
 import NetworkError from './pages/ErrorPages/NetworkError';
-
 import './App.css';
 
-// Компонент-обертка для передачи userId в CartProvider
 function CartProviderWrapper({ children }) {
   const { user } = useAuth();
   const userId = user?.id_user || user?.id;
@@ -43,7 +39,6 @@ function CartProviderWrapper({ children }) {
   );
 }
 
-// Компонент-обертка для передачи userId в FavoritesProvider
 function FavoritesProviderWrapper({ children }) {
   const { user } = useAuth();
   const userId = user?.id_user || user?.id;
@@ -72,7 +67,6 @@ function AppContent() {
         <Header />
         <main className="main-content">
           <Routes>
-            {/* Основные маршруты */}
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<AuthForm type="login" />} />
             <Route path="/register" element={<AuthForm type="register" />} />
@@ -94,8 +88,6 @@ function AppContent() {
             <Route path="/500" element={<ServerError />} />
             <Route path="/403" element={<AccessDenied />} />
             <Route path="/network-error" element={<NetworkError />} />
-            
-            {/* Маршрут 404 должен быть последним */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>

@@ -1,11 +1,6 @@
 const axios = require('axios');
 const sharp = require('sharp');
 
-/**
- * Прокси для загрузки изображений с внешних источников
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- */
 const proxyImage = async (req, res) => {
   try {
     const { url } = req.query;
@@ -17,10 +12,8 @@ const proxyImage = async (req, res) => {
       });
     }
 
-    // Декодируем URL (он может быть закодирован)
     const decodedUrl = decodeURIComponent(url);
     
-    // Проверяем, что URL валидный
     try {
       new URL(decodedUrl);
     } catch (error) {
@@ -30,7 +23,6 @@ const proxyImage = async (req, res) => {
       });
     }
 
-    // Загружаем изображение
     const response = await axios({
       method: 'GET',
       url: decodedUrl,
@@ -38,17 +30,15 @@ const proxyImage = async (req, res) => {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
       },
-      timeout: 10000 // 10 секунд таймаут
+      timeout: 10000
     });
 
     if (!response.data) {
       throw new Error('Изображение не загружено');
     }
 
-    // Получаем тип контента
     const contentType = response.headers['content-type'] || 'image/jpeg';
     
-    // Проверяем, что это изображение
     if (!contentType.startsWith('image/')) {
       return res.status(400).json({
         success: false,
@@ -56,13 +46,11 @@ const proxyImage = async (req, res) => {
       });
     }
 
-    // Оптимизируем изображение если запрошено
     if (req.query.optimize === 'true') {
       const { width, height, quality } = req.query;
       
       let image = sharp(response.data);
       
-      // Изменяем размер если указан
       if (width || height) {
         image = image.resize(
           width ? parseInt(width) : null,
@@ -74,20 +62,18 @@ const proxyImage = async (req, res) => {
         );
       }
       
-      // Устанавливаем качество
       if (quality) {
         image = image.jpeg({ quality: parseInt(quality) });
       } else {
-        image = image.jpeg({ quality: 80 }); // качество по умолчанию
+        image = image.jpeg({ quality: 80 });
       }
       
       const optimizedBuffer = await image.toBuffer();
       
       res.set('Content-Type', 'image/jpeg');
-      res.set('Cache-Control', 'public, max-age=86400'); // Кэшируем на 24 часа
+      res.set('Cache-Control', 'public, max-age=86400');
       res.send(optimizedBuffer);
     } else {
-      // Отправляем оригинальное изображение
       res.set('Content-Type', contentType);
       res.set('Cache-Control', 'public, max-age=86400');
       res.send(response.data);
@@ -96,7 +82,6 @@ const proxyImage = async (req, res) => {
   } catch (error) {
     console.error('Ошибка прокси изображения:', error.message);
     
-    // Определяем тип ошибки
     let statusCode = 500;
     let errorMessage = 'Ошибка при загрузке изображения';
     
@@ -119,11 +104,6 @@ const proxyImage = async (req, res) => {
   }
 };
 
-/**
- * Загружает изображение и возвращает метаданные
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- */
 const getImageMetadata = async (req, res) => {
   try {
     const { url } = req.query;
@@ -146,19 +126,17 @@ const getImageMetadata = async (req, res) => {
       });
     }
 
-    // Загружаем первые байты для получения метаданных
     const response = await axios({
       method: 'GET',
       url: decodedUrl,
       responseType: 'arraybuffer',
       headers: {
         'User-Agent': 'Mozilla/5.0',
-        'Range': 'bytes=0-10000' // Загружаем только начало файла
+        'Range': 'bytes=0-10000'
       },
       timeout: 5000
     });
 
-    // Анализируем метаданные изображения
     const metadata = await sharp(response.data).metadata();
     
     res.json({
@@ -184,11 +162,6 @@ const getImageMetadata = async (req, res) => {
   }
 };
 
-/**
- * Скачивает и сохраняет изображение локально
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- */
 const downloadImage = async (req, res) => {
   try {
     const { url, filename } = req.body;
@@ -211,7 +184,6 @@ const downloadImage = async (req, res) => {
       });
     }
 
-    // Загружаем изображение
     const response = await axios({
       method: 'GET',
       url: decodedUrl,
@@ -219,7 +191,6 @@ const downloadImage = async (req, res) => {
       timeout: 10000
     });
 
-    // Определяем расширение файла
     const contentType = response.headers['content-type'];
     let extension = 'jpg';
     
@@ -231,13 +202,9 @@ const downloadImage = async (req, res) => {
       extension = 'webp';
     }
     
-    // Генерируем имя файла
     const finalFilename = filename 
       ? `${filename}.${extension}`
       : `image_${Date.now()}.${extension}`;
-    
-    // В реальном приложении здесь было бы сохранение файла
-    // Для примера просто возвращаем информацию
     
     res.json({
       success: true,
@@ -261,11 +228,6 @@ const downloadImage = async (req, res) => {
   }
 };
 
-/**
- * Создает превью изображения
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- */
 const createThumbnail = async (req, res) => {
   try {
     const { url } = req.query;
@@ -289,7 +251,6 @@ const createThumbnail = async (req, res) => {
       });
     }
 
-    // Загружаем изображение
     const response = await axios({
       method: 'GET',
       url: decodedUrl,
@@ -297,7 +258,6 @@ const createThumbnail = async (req, res) => {
       timeout: 10000
     });
 
-    // Создаем превью
     const thumbnail = await sharp(response.data)
       .resize(parseInt(width), parseInt(height), {
         fit: 'cover',
@@ -313,7 +273,6 @@ const createThumbnail = async (req, res) => {
   } catch (error) {
     console.error('Ошибка создания превью:', error.message);
     
-    // Возвращаем placeholder если не удалось загрузить изображение
     const placeholder = await sharp({
       create: {
         width: parseInt(req.query.width) || 300,
@@ -330,11 +289,6 @@ const createThumbnail = async (req, res) => {
   }
 };
 
-/**
- * Проверяет доступность изображения
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
- */
 const checkImageAvailability = async (req, res) => {
   try {
     const { url } = req.query;
@@ -357,7 +311,6 @@ const checkImageAvailability = async (req, res) => {
       });
     }
 
-    // Проверяем доступность изображения
     const response = await axios({
       method: 'HEAD',
       url: decodedUrl,

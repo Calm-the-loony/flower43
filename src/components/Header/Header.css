@@ -332,11 +332,10 @@
 .header__nav.open {
   animation: fadeIn 0.3s ease-out;
 }
-/* Добавьте эти стили в существующий Header.css */
 
 .user-avatar {
-  width: 40px;
-  height: 40px;
+  width: 45px;
+  height: 45px;
   border-radius: 50%;
   background: linear-gradient(135deg, #8BC9A1, #7AB890);
   border: none;
@@ -363,7 +362,7 @@
 .user-dropdown {
   position: absolute;
   top: 100%;
-  right: 0;
+  right: 30px;
   background: white;
   border-radius: 10px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);

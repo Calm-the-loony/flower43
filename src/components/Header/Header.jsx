@@ -93,7 +93,7 @@ export default function Header() {
                 </button>
                 <div className="user-dropdown">
                   <Link to="/profile" className="dropdown-item" onClick={() => setMenuOpen(false)}>Мой профиль</Link>
-                  <Link to="/orders" className="dropdown-item" onClick={() => setMenuOpen(false)}>Мои заказы</Link>
+                  {/* <Link to="/orders" className="dropdown-item" onClick={() => setMenuOpen(false)}>Мои заказы</Link> */}
                   <button onClick={handleLogout} className="dropdown-item logout">Выйти</button>
                 </div>
               </div>

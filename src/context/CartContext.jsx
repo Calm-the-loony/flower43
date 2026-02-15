@@ -19,7 +19,11 @@ export const CartProvider = ({ children, userId }) => {
   const loadCart = async () => {
     if (!userId) {
       console.log('⚠️ userId не предоставлен, пропускаем загрузку корзины');
-      setCartItems([]);
+      // Загружаем локальную корзину из localStorage для неавторизованных
+      const localCart = localStorage.getItem('localCart');
+      if (localCart) {
+        setCartItems(JSON.parse(localCart));
+      }
       return;
     }
 
@@ -37,8 +41,8 @@ export const CartProvider = ({ children, userId }) => {
       const result = await response.json();
       
       if (result.success) {
-        setCartItems(result.data);
-        console.log(`✅ Загружено ${result.totalItems} товаров в корзине`);
+        setCartItems(result.data || []);
+        console.log(`✅ Загружено ${result.data?.length || 0} позиций в корзине`);
       } else {
         throw new Error(result.message || 'Ошибка при загрузке корзины');
       }
@@ -56,14 +60,73 @@ export const CartProvider = ({ children, userId }) => {
     loadCart();
   }, [userId]);
 
+  // Сохраняем локальную корзину в localStorage
+  useEffect(() => {
+    if (!userId) {
+      localStorage.setItem('localCart', JSON.stringify(cartItems));
+    }
+  }, [cartItems, userId]);
+
   // Добавить в корзину
   const addToCart = async (product, quantity = 1) => {
-    if (!userId) {
-      console.warn('⚠️ Пользователь не авторизован, нельзя добавить в корзину');
-      setError('Для добавления в корзину необходимо авторизоваться');
-      return false;
+    // Если это кастомный букет
+    if (product.isCustom) {
+      setCartItems(prev => {
+        const existingItemIndex = prev.findIndex(item => item.isCustom && item.id === product.id);
+        
+        if (existingItemIndex >= 0) {
+          const updatedItems = [...prev];
+          updatedItems[existingItemIndex] = {
+            ...updatedItems[existingItemIndex],
+            quantity: updatedItems[existingItemIndex].quantity + quantity
+          };
+          return updatedItems;
+        } else {
+          return [...prev, {
+            ...product,
+            quantity: quantity
+          }];
+        }
+      });
+      
+      console.log(`✅ Кастомный букет "${product.name}" добавлен в корзину`);
+      return true;
     }
 
+    // Для обычных товаров
+    if (!userId) {
+      // Для неавторизованных - сохраняем локально
+      setCartItems(prev => {
+        const existingItemIndex = prev.findIndex(item => item.id === product.id);
+        
+        if (existingItemIndex >= 0) {
+          const updatedItems = [...prev];
+          updatedItems[existingItemIndex] = {
+            ...updatedItems[existingItemIndex],
+            quantity: updatedItems[existingItemIndex].quantity + quantity
+          };
+          return updatedItems;
+        } else {
+          return [...prev, {
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            quantity: quantity,
+            description: product.description,
+            image: product.image || product.images?.[0],
+            images: product.images,
+            category: product.category,
+            in_stock: product.in_stock,
+            isCustom: false
+          }];
+        }
+      });
+      
+      console.log(`✅ Товар "${product.name}" добавлен в локальную корзину`);
+      return true;
+    }
+
+    // Для авторизованных - отправляем на сервер
     try {
       setLoading(true);
       setError(null);
@@ -84,9 +147,7 @@ export const CartProvider = ({ children, userId }) => {
       const result = await response.json();
       
       if (result.success) {
-        // Перезагружаем корзину для синхронизации
-        await loadCart();
-        
+        await loadCart(); // Перезагружаем корзину с сервера
         console.log(`✅ Товар "${product.name}" добавлен в корзину`);
         return true;
       } else {
@@ -101,12 +162,31 @@ export const CartProvider = ({ children, userId }) => {
     }
   };
 
-  // Обновить количество
   const updateQuantity = async (productId, quantity) => {
+    // Для кастомных букетов
+    if (productId.startsWith('custom-')) {
+      setCartItems(prev => {
+        if (quantity <= 0) {
+          return prev.filter(item => item.id !== productId);
+        }
+        return prev.map(item => 
+          item.id === productId ? { ...item, quantity: quantity } : item
+        );
+      });
+      return true;
+    }
+
     if (!userId) {
-      console.warn('⚠️ Пользователь не авторизован, нельзя обновить корзину');
-      setError('Для управления корзиной необходимо авторизоваться');
-      return false;
+      // Для неавторизованных - обновляем локально
+      setCartItems(prev => {
+        if (quantity <= 0) {
+          return prev.filter(item => item.id !== productId);
+        }
+        return prev.map(item => 
+          item.id === productId ? { ...item, quantity: quantity } : item
+        );
+      });
+      return true;
     }
 
     try {
@@ -129,17 +209,7 @@ export const CartProvider = ({ children, userId }) => {
       const result = await response.json();
       
       if (result.success) {
-        // Обновляем локальное состояние
-        setCartItems(prev => {
-          if (quantity <= 0) {
-            return prev.filter(item => item.id !== productId);
-          }
-          return prev.map(item => 
-            item.id === productId ? { ...item, quantity: quantity } : item
-          );
-        });
-        
-        console.log(`✅ Количество обновлено`);
+        await loadCart(); // Перезагружаем корзину с сервера
         return true;
       } else {
         throw new Error(result.message || 'Ошибка при обновлении количества');
@@ -153,12 +223,17 @@ export const CartProvider = ({ children, userId }) => {
     }
   };
 
-  // Удалить из корзины
   const removeFromCart = async (productId) => {
+    // Для кастомных букетов
+    if (productId.startsWith('custom-')) {
+      setCartItems(prev => prev.filter(item => item.id !== productId));
+      return true;
+    }
+
     if (!userId) {
-      console.warn('⚠️ Пользователь не авторизован, нельзя удалить из корзины');
-      setError('Для управления корзиной необходимо авторизоваться');
-      return false;
+      // Для неавторизованных - удаляем локально
+      setCartItems(prev => prev.filter(item => item.id !== productId));
+      return true;
     }
 
     try {
@@ -180,10 +255,7 @@ export const CartProvider = ({ children, userId }) => {
       const result = await response.json();
       
       if (result.success) {
-        // Обновляем локальное состояние
-        setCartItems(prev => prev.filter(item => item.id !== productId));
-        
-        console.log(`✅ Товар удален из корзины`);
+        await loadCart(); // Перезагружаем корзину с сервера
         return true;
       } else {
         throw new Error(result.message || 'Ошибка при удалении из корзины');
@@ -200,9 +272,9 @@ export const CartProvider = ({ children, userId }) => {
   // Очистить корзину
   const clearCart = async () => {
     if (!userId) {
-      console.warn('⚠️ Пользователь не авторизован, нельзя очистить корзину');
-      setError('Для управления корзиной необходимо авторизоваться');
-      return false;
+      setCartItems([]);
+      localStorage.removeItem('localCart');
+      return true;
     }
 
     try {
@@ -223,9 +295,7 @@ export const CartProvider = ({ children, userId }) => {
       const result = await response.json();
       
       if (result.success) {
-        // Очищаем локальное состояние
         setCartItems([]);
-        
         console.log(`✅ Корзина очищена`);
         return true;
       } else {
@@ -240,38 +310,31 @@ export const CartProvider = ({ children, userId }) => {
     }
   };
 
-  // Рассчитать сумму
   const calculateSubtotal = () => {
     return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
   };
 
-  // Получить общее количество товаров (это то, что нужно для Header)
   const getCartItemsCount = () => {
+    return cartItems.length; 
+  };
+
+  const getTotalQuantity = () => {
     return cartItems.reduce((total, item) => total + item.quantity, 0);
   };
 
-  // Получить общее количество товаров (альтернативное название)
-  const getTotalItems = () => {
-    return getCartItemsCount();
-  };
-
-  // Проверить, есть ли товар в корзине
   const isInCart = (productId) => {
     return cartItems.some(item => item.id === productId);
   };
 
-  // Получить количество конкретного товара
   const getItemQuantity = (productId) => {
     const item = cartItems.find(item => item.id === productId);
     return item ? item.quantity : 0;
   };
 
-  // Обновить корзину (принудительная перезагрузка)
   const refreshCart = () => {
     loadCart();
   };
 
-  // Очистить ошибки
   const clearError = () => {
     setError(null);
   };
@@ -282,22 +345,19 @@ export const CartProvider = ({ children, userId }) => {
     loading,
     error,
     
-    // Основные действия
     addToCart,
     updateQuantity,
     removeFromCart,
     clearCart,
     
-    // Вспомогательные функции
     calculateSubtotal,
-    getCartItemsCount, // Добавьте эту функцию
-    getTotalItems,
+    getCartItemsCount, 
+    getTotalQuantity,  
     isInCart,
     getItemQuantity,
     refreshCart,
     clearError,
     
-    // Информация о пользователе
     userId
   };
 

@@ -86,7 +86,6 @@ exports.login = async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        // Валидация
         if (!email || !password) {
             return res.status(400).json({
                 success: false,

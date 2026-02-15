@@ -44,8 +44,6 @@ export const FavoritesProvider = ({ children, userId }) => {
     } catch (error) {
       console.error('❌ Ошибка загрузки избранного:', error);
       setError(error.message);
-      
-      // В случае ошибки очищаем избранное
       setFavorites([]);
     } finally {
       setLoading(false);
@@ -84,7 +82,6 @@ export const FavoritesProvider = ({ children, userId }) => {
       const result = await response.json();
       
       if (result.success) {
-        // Обновляем локальное состояние
         setFavorites(prev => {
           const existingItem = prev.find(item => item.id === product.id);
           if (!existingItem) {
@@ -137,7 +134,6 @@ export const FavoritesProvider = ({ children, userId }) => {
       const result = await response.json();
       
       if (result.success) {
-        // Обновляем локальное состояние
         setFavorites(prev => prev.filter(item => item.id !== productId));
         
         console.log(`✅ Товар удален из избранного`);
@@ -154,7 +150,6 @@ export const FavoritesProvider = ({ children, userId }) => {
     }
   };
 
-  // Переключить избранное
   const toggleFavorite = async (product) => {
     const isCurrentlyFavorite = favorites.some(item => item.id === product.id);
     
@@ -165,7 +160,6 @@ export const FavoritesProvider = ({ children, userId }) => {
     }
   };
 
-  // Проверить, в избранном ли товар
   const isFavorite = (id) => {
     return favorites.some(item => item.id === id);
   };
@@ -200,7 +194,6 @@ export const FavoritesProvider = ({ children, userId }) => {
       
       await Promise.all(deletePromises);
       
-      // Очищаем локальное состояние
       setFavorites([]);
       
       console.log(`✅ Все избранное очищено`);
@@ -219,7 +212,6 @@ export const FavoritesProvider = ({ children, userId }) => {
     return favorites.length;
   };
 
-  // Обновить избранное (принудительная перезагрузка)
   const refreshFavorites = () => {
     loadFavorites();
   };
@@ -242,12 +234,8 @@ export const FavoritesProvider = ({ children, userId }) => {
     isFavorite,
     getFavoritesCount,
     clearFavorites,
-    
-    // Вспомогательные функции
     refreshFavorites,
     clearError,
-    
-    // Информация о пользователе
     userId
   };
 

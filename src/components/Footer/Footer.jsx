@@ -51,7 +51,7 @@ export default function Footer() {
         <div className="footer__section">
           <h4>Контакты</h4>
           <ul>
-            <li>г. Тихорецк, ул. Цветочная, 15</li>
+            <li>Ростов-на-Дону, ул. Пушкинская, 150</li>
             <li>+7 (999) 123-45-67</li>
             <li>floralbliss@example.com</li>
             <li>Ежедневно 9:00 - 21:00</li>

@@ -3,33 +3,29 @@ const cors = require('cors');
 const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes');
 const favoriteRoutes = require('./routes/favoriteRoutes');
-const cartRoutes = require('./routes/cartRoutes'); 
-const imageRoutes = require('./routes/imageRoutes');
+const cartRoutes = require('./routes/cartRoutes');
+const bouquetComponentsRoutes = require('./routes/bouquetComponents');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
 app.use(cors({
     origin: process.env.CLIENT_URL || 'http://localhost:3000',
     credentials: true
 }));
 app.use(express.json());
 app.use('/api/images', require('./routes/imageRoutes'));
-// Логирование запросов
 app.use((req, res, next) => {
     console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
     next();
 });
-
-// Routes
 app.use('/api/auth', userRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/favorites', favoriteRoutes);
-app.use('/api/cart', cartRoutes); // Добавьте эту строку
+app.use('/api/cart', cartRoutes);
+app.use('/api/bouquet-components', bouquetComponentsRoutes);
 
-// Health check
 app.get('/api/health', (req, res) => {
     res.json({ 
         success: true, 
@@ -38,7 +34,6 @@ app.get('/api/health', (req, res) => {
     });
 });
 
-// Обработка несуществующих маршрутов
 app.use('*', (req, res) => {
     res.status(404).json({
         success: false,
@@ -46,7 +41,6 @@ app.use('*', (req, res) => {
     });
 });
 
-// Обработка ошибок
 app.use((error, req, res, next) => {
     console.error('❌ Ошибка сервера:', error);
     res.status(500).json({
@@ -56,8 +50,8 @@ app.use((error, req, res, next) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`🚀 Сервер запущен на порту http://localhost:${PORT}`);
-    console.log(`🏥 Health check: http://localhost:${PORT}/api/health`);
-    console.log(`❤️  Favorites API готов к работе`);
-    console.log(`🛒 Cart API готов к работе`);
+    console.log(`Сервер запущен на порту http://localhost:${PORT}`);
+    console.log(`Health check: http://localhost:${PORT}/api/health`);
+    console.log(`Favorites API готов к работе`);
+    console.log(`Cart API готов к работе`);
 });

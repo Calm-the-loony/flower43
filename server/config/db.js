@@ -13,13 +13,11 @@ const pool = mysql.createPool({
     charset: 'utf8mb4'
 });
 
-// Тестирование подключения
 const testConnection = async () => {
     try {
         const connection = await pool.getConnection();
         console.log('✅ Успешное подключение к базе данных');
         
-        // Проверим существование таблицы products
         const [tables] = await connection.execute(`
             SELECT TABLE_NAME 
             FROM INFORMATION_SCHEMA.TABLES 
@@ -29,7 +27,6 @@ const testConnection = async () => {
         if (tables.length > 0) {
             console.log('✅ Таблица products существует');
             
-            // Посчитаем товары
             const [count] = await connection.execute('SELECT COUNT(*) as count FROM products');
             console.log(`✅ В таблице products: ${count[0].count} записей`);
         } else {
