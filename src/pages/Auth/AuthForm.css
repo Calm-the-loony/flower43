@@ -354,7 +354,6 @@
   text-decoration: underline;
 }
 
-/* Адаптивность */
 @media (max-width: 768px) {
   .auth-card {
     padding: 35px 30px;
@@ -409,7 +408,6 @@
   }
 }
 
-/* Специальные стили для чекбокса чтобы текст не разъезжался */
 .checkbox-label {
   word-wrap: break-word;
   overflow-wrap: break-word;

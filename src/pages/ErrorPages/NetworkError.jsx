@@ -1,4 +1,3 @@
-// src/pages/ErrorPages/NetworkError.jsx
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './ErrorPages.css';
@@ -83,7 +82,6 @@ const NetworkError = () => {
               <button 
                 className="error-btn secondary"
                 onClick={() => {
-                  // Открыть настройки сети в разных ОС
                   if (/Android/i.test(navigator.userAgent)) {
                     window.location.href = 'android.settings.WIFI_SETTINGS';
                   } else if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {

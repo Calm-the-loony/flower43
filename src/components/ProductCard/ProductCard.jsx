@@ -25,18 +25,15 @@ const ProductCard = ({ product, onQuickView }) => {
     type
   } = product;
 
-  // Функция для получения первого изображения
   const getFirstImage = () => {
     if (!images) return null;
     
     try {
       let imageArray = [];
       
-      // Если images уже массив
       if (Array.isArray(images)) {
         imageArray = images;
       } 
-      // Если images - JSON строка
       else if (typeof images === 'string') {
         try {
           const parsed = JSON.parse(images);
@@ -46,7 +43,6 @@ const ProductCard = ({ product, onQuickView }) => {
             imageArray = [parsed];
           }
         } catch (e) {
-          // Если это не JSON, используем как строку
           if (images.trim() !== '') {
             imageArray = [images];
           }
@@ -69,7 +65,6 @@ const ProductCard = ({ product, onQuickView }) => {
         const firstImage = getFirstImage();
         
         if (!firstImage) {
-          // Используем placeholder если нет изображений
           setImageUrl(`https://images.unsplash.com/photo-1562690868-60bbe7293e94?w=400&h=600&fit=crop&auto=format&text=${encodeURIComponent(name)}`);
           setImageLoaded(true);
           setLoading(false);
@@ -78,15 +73,12 @@ const ProductCard = ({ product, onQuickView }) => {
 
         console.log('🖼️ Загрузка изображения для:', name, firstImage);
         
-        // Для Unsplash изображений используем прямое подключение (они разрешают CORS)
         if (firstImage.includes('unsplash.com')) {
           setImageUrl(firstImage);
           return;
         }
         
-        // Для других внешних URL используем прокси
         if (firstImage.startsWith('http')) {
-          // Пробуем прямое подключение сначала
           const testImage = new Image();
           testImage.crossOrigin = 'anonymous';
           
@@ -99,7 +91,6 @@ const ProductCard = ({ product, onQuickView }) => {
           
           testImage.onerror = () => {
             console.log('🔄 Прямое подключение не удалось, используем прокси:', firstImage);
-            // Используем прокси
             setImageUrl(`http://localhost:5000/api/images/proxy?url=${encodeURIComponent(firstImage)}`);
           };
           
@@ -107,13 +98,11 @@ const ProductCard = ({ product, onQuickView }) => {
           return;
         }
         
-        // Для локальных путей
         if (firstImage.startsWith('/')) {
           setImageUrl(firstImage);
           return;
         }
         
-        // Дефолтное изображение
         setImageUrl(`https://images.unsplash.com/photo-1562690868-60bbe7293e94?w=400&h=600&fit=crop&auto=format&text=${encodeURIComponent(name)}`);
         
       } catch (error) {
@@ -131,8 +120,6 @@ const ProductCard = ({ product, onQuickView }) => {
   const handleImageError = (e) => {
     console.error('❌ Ошибка в img теге:', imageUrl);
     setImageError(true);
-    
-    // Пробуем загрузить placeholder
     e.target.src = `https://images.unsplash.com/photo-1562690868-60bbe7293e94?w=400&h=600&fit=crop&auto=format&text=${encodeURIComponent(name)}`;
   };
 
@@ -195,7 +182,6 @@ const ProductCard = ({ product, onQuickView }) => {
     return new Intl.NumberFormat('ru-RU').format(normalized) + ' ₽';
   };
 
-  // Текст для placeholder
   const getProductTypeText = () => {
     switch (type) {
       case 'plant': return 'растение';
@@ -219,7 +205,6 @@ const ProductCard = ({ product, onQuickView }) => {
               crossOrigin="anonymous"
             />
             
-            {/* Индикатор загрузки */}
             {(loading || !imageLoaded) && !imageError && (
               <div className="image-loading">
                 <div className="loading-spinner"></div>
@@ -227,7 +212,6 @@ const ProductCard = ({ product, onQuickView }) => {
               </div>
             )}
             
-            {/* Бейджи */}
             <div className="product-card__badges">
               {!in_stock && (
                 <span className="badge badge-out-of-stock">Нет в наличии</span>
@@ -243,7 +227,6 @@ const ProductCard = ({ product, onQuickView }) => {
               )}
             </div>
 
-            {/* Действия */}
             <div className="product-card__actions">
               <button 
                 className={`favorite-btn ${isFavorite(id) ? 'active' : ''}`}
@@ -274,7 +257,6 @@ const ProductCard = ({ product, onQuickView }) => {
         </Link>
 
         <div className="product-card__content">
-          {/* Название и описание */}
           <Link to={`/product/${id}`} className="product-card__text-link">
             <h3 className="product-card__name">{name}</h3>
             <p className="product-card__description">
@@ -282,7 +264,6 @@ const ProductCard = ({ product, onQuickView }) => {
             </p>
           </Link>
 
-          {/* Цена и кнопка */}
           <div className="product-card__footer">
             <div className="product-price">
               {isOnSale && original_price && (

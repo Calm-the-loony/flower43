@@ -15,11 +15,9 @@ export const CartProvider = ({ children, userId }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Загрузка корзины с сервера
   const loadCart = async () => {
     if (!userId) {
       console.log('⚠️ userId не предоставлен, пропускаем загрузку корзины');
-      // Загружаем локальную корзину из localStorage для неавторизованных
       const localCart = localStorage.getItem('localCart');
       if (localCart) {
         setCartItems(JSON.parse(localCart));
@@ -55,21 +53,17 @@ export const CartProvider = ({ children, userId }) => {
     }
   };
 
-  // Загрузка корзины при монтировании и изменении userId
   useEffect(() => {
     loadCart();
   }, [userId]);
 
-  // Сохраняем локальную корзину в localStorage
   useEffect(() => {
     if (!userId) {
       localStorage.setItem('localCart', JSON.stringify(cartItems));
     }
   }, [cartItems, userId]);
 
-  // Добавить в корзину
   const addToCart = async (product, quantity = 1) => {
-    // Если это кастомный букет
     if (product.isCustom) {
       setCartItems(prev => {
         const existingItemIndex = prev.findIndex(item => item.isCustom && item.id === product.id);
@@ -93,9 +87,7 @@ export const CartProvider = ({ children, userId }) => {
       return true;
     }
 
-    // Для обычных товаров
     if (!userId) {
-      // Для неавторизованных - сохраняем локально
       setCartItems(prev => {
         const existingItemIndex = prev.findIndex(item => item.id === product.id);
         
@@ -126,7 +118,6 @@ export const CartProvider = ({ children, userId }) => {
       return true;
     }
 
-    // Для авторизованных - отправляем на сервер
     try {
       setLoading(true);
       setError(null);
@@ -147,7 +138,7 @@ export const CartProvider = ({ children, userId }) => {
       const result = await response.json();
       
       if (result.success) {
-        await loadCart(); // Перезагружаем корзину с сервера
+        await loadCart();
         console.log(`✅ Товар "${product.name}" добавлен в корзину`);
         return true;
       } else {
@@ -163,8 +154,9 @@ export const CartProvider = ({ children, userId }) => {
   };
 
   const updateQuantity = async (productId, quantity) => {
-    // Для кастомных букетов
-    if (productId.startsWith('custom-')) {
+    const isCustomProduct = typeof productId === 'string' && productId.startsWith('custom-');
+    
+    if (isCustomProduct) {
       setCartItems(prev => {
         if (quantity <= 0) {
           return prev.filter(item => item.id !== productId);
@@ -177,7 +169,6 @@ export const CartProvider = ({ children, userId }) => {
     }
 
     if (!userId) {
-      // Для неавторизованных - обновляем локально
       setCartItems(prev => {
         if (quantity <= 0) {
           return prev.filter(item => item.id !== productId);
@@ -209,7 +200,7 @@ export const CartProvider = ({ children, userId }) => {
       const result = await response.json();
       
       if (result.success) {
-        await loadCart(); // Перезагружаем корзину с сервера
+        await loadCart();
         return true;
       } else {
         throw new Error(result.message || 'Ошибка при обновлении количества');
@@ -224,14 +215,14 @@ export const CartProvider = ({ children, userId }) => {
   };
 
   const removeFromCart = async (productId) => {
-    // Для кастомных букетов
-    if (productId.startsWith('custom-')) {
+    const isCustomProduct = typeof productId === 'string' && productId.startsWith('custom-');
+    
+    if (isCustomProduct) {
       setCartItems(prev => prev.filter(item => item.id !== productId));
       return true;
     }
 
     if (!userId) {
-      // Для неавторизованных - удаляем локально
       setCartItems(prev => prev.filter(item => item.id !== productId));
       return true;
     }
@@ -255,7 +246,7 @@ export const CartProvider = ({ children, userId }) => {
       const result = await response.json();
       
       if (result.success) {
-        await loadCart(); // Перезагружаем корзину с сервера
+        await loadCart();
         return true;
       } else {
         throw new Error(result.message || 'Ошибка при удалении из корзины');
@@ -269,7 +260,6 @@ export const CartProvider = ({ children, userId }) => {
     }
   };
 
-  // Очистить корзину
   const clearCart = async () => {
     if (!userId) {
       setCartItems([]);
@@ -340,7 +330,6 @@ export const CartProvider = ({ children, userId }) => {
   };
 
   const value = {
-    // Состояние
     cartItems,
     loading,
     error,

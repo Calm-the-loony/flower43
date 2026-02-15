@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useFavorites } from '../../context/FavoritesContext';
 import './Profile.css';
 
-// Минимальный набор иконок
+
 const Icons = {
   user: '👤',
   order: '📦',

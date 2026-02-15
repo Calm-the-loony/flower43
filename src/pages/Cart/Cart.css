@@ -30,7 +30,6 @@
   color: #6B5B7D;
 }
 
-/* Макет корзины */
 .cart-layout {
   display: grid;
   grid-template-columns: 1fr 380px;

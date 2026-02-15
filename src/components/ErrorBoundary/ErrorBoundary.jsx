@@ -1,34 +1,26 @@
-// src/components/ErrorBoundary/ErrorBoundary.jsx
-import React, { Component } from 'react';
+import React from 'react';
 import NetworkError from '../../pages/ErrorPages/NetworkError';
 
-class ErrorBoundary extends Component {
+class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
     this.state = { 
       hasError: false,
       error: null,
-      errorInfo: null,
       isOnline: navigator.onLine
     };
   }
 
   static getDerivedStateFromError(error) {
-    return { hasError: true };
+    return { hasError: true, error };
   }
 
   componentDidCatch(error, errorInfo) {
-    this.setState({
-      error: error,
-      errorInfo: errorInfo
-    });
-    
-    // Можно отправить ошибку в сервис логирования
     console.error('ErrorBoundary caught an error:', error, errorInfo);
     
-    // Отправка ошибки на сервер (опционально)
-    if (process.env.NODE_ENV === 'production') {
-      this.logErrorToService(error, errorInfo);
+    // В development показываем полную информацию
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Component stack:', errorInfo.componentStack);
     }
   }
 
@@ -50,32 +42,8 @@ class ErrorBoundary extends Component {
     this.setState({ isOnline: false });
   }
 
-  logErrorToService = (error, errorInfo) => {
-    // Реализация отправки ошибки на сервер
-    // Например, в Sentry, LogRocket или ваш собственный сервис
-    try {
-      fetch('/api/log-error', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          error: error.toString(),
-          stack: errorInfo.componentStack,
-          url: window.location.href,
-          timestamp: new Date().toISOString(),
-          userAgent: navigator.userAgent
-        })
-      });
-    } catch (logError) {
-      console.error('Failed to log error:', logError);
-    }
-  }
-
   handleReset = () => {
-    this.setState({ 
-      hasError: false,
-      error: null,
-      errorInfo: null 
-    });
+    this.setState({ hasError: false, error: null });
     window.location.reload();
   }
 
@@ -85,7 +53,6 @@ class ErrorBoundary extends Component {
     }
 
     if (this.state.hasError) {
-      // Кастомная страница для ошибок в приложении
       return (
         <div className="error-boundary-page">
           <div className="error-boundary-container">
@@ -98,15 +65,17 @@ class ErrorBoundary extends Component {
                 В приложении произошла непредвиденная ошибка. Мы уже работаем над ее решением.
               </p>
               
-              <div className="error-details">
-                <details>
-                  <summary>Техническая информация (для разработчиков)</summary>
-                  <div className="details-content">
-                    <pre>{this.state.error && this.state.error.toString()}</pre>
-                    <pre>{this.state.errorInfo && this.state.errorInfo.componentStack}</pre>
-                  </div>
-                </details>
-              </div>
+              {/* Техническая информация только для разработки */}
+              {process.env.NODE_ENV === 'development' && this.state.error && (
+                <div className="error-details">
+                  <details>
+                    <summary>Техническая информация</summary>
+                    <div className="details-content">
+                      <pre>{this.state.error.toString()}</pre>
+                    </div>
+                  </details>
+                </div>
+              )}
 
               <div className="error-actions">
                 <button 

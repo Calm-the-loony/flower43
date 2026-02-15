@@ -75,7 +75,6 @@ export default function AboutUs() {
 
   return (
     <div className="about-page">
-      {/* Hero */}
       <section className="about-hero">
         <div className="about-hero-content">
           <h1>О нас</h1>
@@ -90,7 +89,6 @@ export default function AboutUs() {
         </div>
       </section>
 
-      {/* История */}
       <section className="about-story">
         <div className="container">
           <div className="story-grid">
@@ -140,13 +138,12 @@ export default function AboutUs() {
         </div>
       </section>
 
-      {/* Статистика */}
       <section className="about-stats">
         <div className="container">
           <h2>Floral Bliss в цифрах</h2>
           <div className="stats-grid">
             {stats.map((stat, index) => (
-              <div key={index} className="stat-card" data-aos="fade-up" data-aos-delay={index * 100}>
+              <div key={index} className="stat-card">
                 <div className="stat-number">{stat.number}</div>
                 <div className="stat-label">{stat.label}</div>
               </div>
@@ -155,13 +152,12 @@ export default function AboutUs() {
         </div>
       </section>
 
-      {/* Ценности */}
       <section className="about-values">
         <div className="container">
           <h2>Наши ценности</h2>
           <div className="values-grid">
             {values.map((value, index) => (
-              <div key={index} className="value-card" data-aos="fade-up" data-aos-delay={index * 100}>
+              <div key={index} className="value-card">
                 <div className="value-icon">{value.icon}</div>
                 <h3>{value.title}</h3>
                 <p>{value.description}</p>
@@ -171,7 +167,6 @@ export default function AboutUs() {
         </div>
       </section>
 
-      {/* Команда */}
       <section className="about-team">
         <div className="container">
           <h2>Наша команда</h2>
@@ -180,9 +175,9 @@ export default function AboutUs() {
           </p>
           <div className="team-grid">
             {teamMembers.map(member => (
-              <div key={member.id} className="team-card" data-aos="fade-up">
+              <div key={member.id} className="team-card">
                 <div className="team-image">
-                  <img src={member.image.trim()} alt={member.name} />
+                  <img src={member.image} alt={member.name} />
                 </div>
                 <div className="team-info">
                   <h3>{member.name}</h3>
@@ -195,7 +190,6 @@ export default function AboutUs() {
         </div>
       </section>
 
-      {/* CTA */}
       <section className="about-cta">
         <div className="about-cta-container">
           <div className="about-cta-content">

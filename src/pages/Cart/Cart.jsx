@@ -6,7 +6,6 @@ import './Cart.css';
 export default function Cart() {
   const { cartItems, updateQuantity, removeFromCart, calculateSubtotal, clearCart } = useCart();
   const [deliveryMethod, setDeliveryMethod] = useState('courier');
-  const [promoCode, setPromoCode] = useState('');
 
   const calculateDelivery = () => {
     if (deliveryMethod === 'pickup') return 0;
@@ -16,10 +15,6 @@ export default function Cart() {
 
   const calculateTotal = () => {
     return calculateSubtotal() + calculateDelivery();
-  };
-
-  const applyPromoCode = () => {
-    alert('Промокод применен!');
   };
 
   const handleCheckout = () => {
@@ -53,7 +48,6 @@ export default function Cart() {
         </div>
 
         <div className="cart-layout">
-          {/* Левая колонка - товары */}
           <div className="cart-items">
             <div className="items-header">
               <span>Товар</span>
@@ -106,7 +100,6 @@ export default function Cart() {
             ))}
           </div>
 
-          {/* Правая колонка - итоги и оформление */}
           <div className="cart-summary">
             <div className="summary-card">
               <h3>Итоги заказа</h3>
@@ -155,25 +148,6 @@ export default function Cart() {
                       <span className="option-description">г. Ростов-на-Дону, ул. Пушкинская, 150</span>
                     </div>
                   </label>
-                </div>
-              </div>
-
-              <div className="promo-code">
-                <h4>Промокод</h4>
-                <div className="promo-input-group">
-                  <input
-                    type="text"
-                    placeholder="Введите промокод"
-                    value={promoCode}
-                    onChange={(e) => setPromoCode(e.target.value)}
-                  />
-                  <button 
-                    className="apply-promo-btn"
-                    onClick={applyPromoCode}
-                    disabled={!promoCode.trim()}
-                  >
-                    Применить
-                  </button>
                 </div>
               </div>
 

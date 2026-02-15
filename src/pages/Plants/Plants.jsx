@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import ProductCard from '../../components/ProductCard/ProductCard';
 import './Plants.css';
 
-// Используем правильные категории на основе данных из БД
 const categories = [
   { id: 'all', name: 'Все растения', dbField: null },
   { id: 'large', name: 'Крупные растения', dbField: 'large' },
@@ -206,7 +205,7 @@ export default function Plants() {
         });
         break;
       default:
-        // Сортировка по дате создания (новые первыми)
+
         filtered.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
         break;
     }
@@ -256,7 +255,6 @@ ${plant.light ? `Освещение: ${plant.light}` : ''}`;
   return (
     <div className="plants-page">
       <div className="container">
-        {/* Hero секция с баннером как в букетах */}
         <section className="bouquets-hero">
           <div className="bouquets-hero-content">
             <div className="hero-decoration">
@@ -275,7 +273,6 @@ ${plant.light ? `Освещение: ${plant.light}` : ''}`;
           </div>
         </section>
 
-        {/* Поиск без иконки как в букетах */}
         <section className="search-section">
           <div className="search-container">
             <div className="search-input-group">
@@ -305,7 +302,6 @@ ${plant.light ? `Освещение: ${plant.light}` : ''}`;
           </div>
         </section>
 
-        {/* Фильтры и поиск - КАК В БУКЕТАХ */}
         <section className="bouquets-filters">
           <div className="filters-grid">
             {/* Категории */}
@@ -458,21 +454,6 @@ ${plant.light ? `Освещение: ${plant.light}` : ''}`;
           )}
         </section>
 
-        {/* CTA секция как в букетах */}
-        <section className="bouquets-cta">
-          <div className="cta-content">
-            <h2>Нужна помощь с выбором?</h2>
-            <p>Наши консультанты помогут подобрать идеальное растение для ваших условий</p>
-            <div className="cta-buttons">
-              <Link to="/consultation" className="cta-button primary">
-                Получить консультацию
-              </Link>
-              <Link to="/care" className="cta-button secondary">
-                Узнать об уходе
-              </Link>
-            </div>
-          </div>
-        </section>
       </div>
     </div>
   );

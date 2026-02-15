@@ -26,7 +26,6 @@ export default function AuthForm({ type = 'login' }) {
       [name]: type === 'checkbox' ? checked : value
     }));
     
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -81,7 +80,6 @@ export default function AuthForm({ type = 'login' }) {
 
     try {
       if (type === 'register') {
-        // Регистрация через API
         const result = await register({
           firstName: formData.firstName,
           lastName: formData.lastName,
@@ -91,17 +89,14 @@ export default function AuthForm({ type = 'login' }) {
         });
 
         if (result.success) {
-          // Перенаправление на страницу профиля после регистрации
           navigate('/profile');
         } else {
           setErrors({ submit: result.message });
         }
       } else {
-        // Вход через API
         const result = await login(formData.email, formData.password);
         
         if (result.success) {
-          // Перенаправление на главную страницу после входа
           navigate('/');
         } else {
           setErrors({ submit: result.message });
@@ -117,7 +112,6 @@ export default function AuthForm({ type = 'login' }) {
 
   const handleSocialLogin = (provider) => {
     console.log(`Вход через ${provider}`);
-    // Здесь будет логика социальной авторизации
   };
 
   return (

@@ -21,7 +21,6 @@ import Bouquets from './pages/Bouquets/Bouquets';
 import Plants from './pages/Plants/Plants';
 import Compositions from './pages/Compositions/Compositions';
 import CustomBouquet from './pages/CustomBouquet/CustomBouquet';
-import Consultation from './pages/Consultation/Consultation';
 import NotFound from './pages/ErrorPages/NotFound';
 import ServerError from './pages/ErrorPages/ServerError';
 import AccessDenied from './pages/ErrorPages/AccessDenied';
@@ -82,7 +81,6 @@ function AppContent() {
             <Route path="/compositions" element={<Compositions />} />
             <Route path="/custom-bouquet" element={<CustomBouquet />} />
             <Route path="/custom-composition" element={<CustomBouquet />} />
-            <Route path="/consultation" element={<Consultation />} />
 
             {/* Страницы ошибок */}
             <Route path="/500" element={<ServerError />} />

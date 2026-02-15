@@ -1,4 +1,3 @@
-/* BouquetShowcase.css */
 .bouquet-showcase {
   background: linear-gradient(135deg, #FFFBF5 0%, #FEF8F0 50%, #FFFBF5 100%);
   padding: 100px 24px;
@@ -204,6 +203,8 @@
 }
 
 .bouquet__add-to-cart {
+  position: relative;
+  overflow: hidden;
   background: linear-gradient(135deg, #8BC9A1, #7AB890);
   color: white;
   border: none;
@@ -218,10 +219,115 @@
   box-shadow: 0 4px 15px rgba(139, 201, 161, 0.3);
 }
 
-.bouquet__add-to-cart:hover {
+.bouquet__add-to-cart:hover:not(.added) {
   background: linear-gradient(135deg, #7AB890, #6AA780);
   transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 6px 20px rgba(139, 201, 161, 0.4);
+  box-shadow: 0 8px 25px rgba(139, 201, 161, 0.4);
+}
+
+.bouquet__add-to-cart.added {
+  background: linear-gradient(135deg, #7AB890, #6AA780) !important;
+  transform: scale(1.05);
+}
+
+.bouquet__add-to-cart.added::before {
+  content: '✓ Добавлено';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #7AB890, #6AA780);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.bouquet__add-to-cart svg {
+  transition: transform 0.3s ease;
+}
+
+.bouquet__add-to-cart:hover svg {
+  transform: scale(1.2);
+}
+
+.bouquet__add-to-cart.added svg {
+  opacity: 0;
+}
+
+.favorite-heart {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  z-index: 2;
+}
+
+.favorite-heart:hover {
+  background: white;
+  transform: scale(1.1);
+}
+
+.favorite-heart svg {
+  width: 20px;
+  height: 20px;
+  color: #ccc;
+  transition: all 0.3s ease;
+}
+
+.favorite-heart.active svg {
+  color: #E74C3C;
+  fill: #E74C3C;
+}
+
+.favorite-heart:hover svg {
+  color: #E74C3C;
+}
+
+.favorite-heart.heart-animate {
+  animation: heartBeat 0.6s ease;
+}
+
+@keyframes heartBeat {
+  0% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.3);
+  }
+  50% {
+    transform: scale(0.9);
+  }
+  75% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 /* CTA секция */
@@ -341,292 +447,7 @@
   box-shadow: 0 8px 25px rgba(139, 201, 161, 0.3);
 }
 
-/* Адаптивность */
-@media (max-width: 768px) {
-  .bouquet-showcase {
-    padding: 80px 20px;
-  }
-  
-  .showcase__title {
-    font-size: 2.4rem;
-  }
-  
-  .showcase__grid {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 25px;
-    margin-bottom: 80px;
-  }
-  
-  .bouquet__image {
-    height: 240px;
-  }
-  
-  .showcase__cta {
-    padding: 60px 30px;
-  }
-  
-  .cta__title {
-    font-size: 2rem;
-  }
-  
-  .cta__buttons {
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .cta__button {
-    width: 100%;
-    max-width: 300px;
-  }
-}
-
-@media (max-width: 480px) {
-  .bouquet-showcase {
-    padding: 60px 16px;
-  }
-  
-  .showcase__title {
-    font-size: 2rem;
-  }
-  
-  .showcase__header {
-    margin-bottom: 60px;
-  }
-  
-  .bouquet__info {
-    padding: 24px;
-  }
-  
-  .bouquet__footer {
-    flex-direction: column;
-    gap: 20px;
-    align-items: stretch;
-  }
-  
-  .bouquet__add-to-cart {
-    justify-content: center;
-  }
-  
-  .showcase__cta {
-    padding: 50px 24px;
-  }
-  
-  .cta__title {
-    font-size: 1.8rem;
-  }
-  
-  .cta__description {
-    font-size: 1.1rem;
-  }
-}
-
-/* Анимация добавления в корзину */
-.bouquet__add-to-cart {
-  position: relative;
-  overflow: hidden;
-}
-
-.bouquet__add-to-cart.added {
-  background: linear-gradient(135deg, #7AB890, #6AA780) !important;
-  transform: scale(1.05);
-}
-
-.bouquet__add-to-cart.added::before {
-  content: '✓ Добавлено';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, #7AB890, #6AA780);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-weight: 600;
-  animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Улучшенные hover-эффекты для кнопки */
-.bouquet__add-to-cart:hover:not(.added) {
-  background: linear-gradient(135deg, #7AB890, #6AA780);
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 8px 25px rgba(139, 201, 161, 0.4);
-}
-
-/* Анимация для иконки корзины */
-.bouquet__add-to-cart svg {
-  transition: transform 0.3s ease;
-}
-
-.bouquet__add-to-cart:hover svg {
-  transform: scale(1.2);
-}
-
-.bouquet__add-to-cart.added svg {
-  opacity: 0;
-}
-/* Стили для кнопки избранного */
-.favorite-heart {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  width: 40px;
-  height: 40px;
-  background: rgba(255, 255, 255, 0.9);
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-  z-index: 2;
-}
-
-.favorite-heart:hover {
-  background: white;
-  transform: scale(1.1);
-}
-
-.favorite-heart svg {
-  width: 20px;
-  height: 20px;
-  color: #ccc;
-  transition: all 0.3s ease;
-}
-
-.favorite-heart.active svg {
-  color: #E74C3C;
-  fill: #E74C3C;
-}
-
-.favorite-heart:hover svg {
-  color: #E74C3C;
-}
-
-/* Анимация сердца */
-.favorite-heart.heart-animate {
-  animation: heartBeat 0.6s ease;
-}
-
-@keyframes heartBeat {
-  0% {
-    transform: scale(1);
-  }
-  25% {
-    transform: scale(1.3);
-  }
-  50% {
-    transform: scale(0.9);
-  }
-  75% {
-    transform: scale(1.2);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-/* Анимация добавления в корзину */
-.bouquet__add-to-cart {
-  position: relative;
-  overflow: hidden;
-}
-
-.bouquet__add-to-cart.added {
-  background: linear-gradient(135deg, #7AB890, #6AA780) !important;
-  transform: scale(1.05);
-}
-
-.bouquet__add-to-cart.added::before {
-  content: '✓ Добавлено';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, #7AB890, #6AA780);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-weight: 600;
-  animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Улучшенные hover-эффекты для кнопки корзины */
-.bouquet__add-to-cart:hover:not(.added) {
-  background: linear-gradient(135deg, #7AB890, #6AA780);
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 8px 25px rgba(139, 201, 161, 0.4);
-}
-
-/* Анимация для иконки корзины */
-.bouquet__add-to-cart svg {
-  transition: transform 0.3s ease;
-}
-
-.bouquet__add-to-cart:hover svg {
-  transform: scale(1.2);
-}
-
-.bouquet__add-to-cart.added svg {
-  opacity: 0;
-}
-
-/* Адаптивность для кнопки избранного */
-@media (max-width: 768px) {
-  .favorite-heart {
-    width: 36px;
-    height: 36px;
-  }
-  
-  .favorite-heart svg {
-    width: 18px;
-    height: 18px;
-  }
-}
-
-@media (max-width: 480px) {
-  .favorite-heart {
-    width: 32px;
-    height: 32px;
-    top: 10px;
-    right: 10px;
-  }
-  
-  .favorite-heart svg {
-    width: 16px;
-    height: 16px;
-  }
-}
-/* Добавьте эти стили в конец существующего CSS файла */
-
-/* Hero секция из моего кода */
+/* Hero секция */
 .bouquets-hero {
   text-align: center;
   padding: 120px 20px 80px;
@@ -703,7 +524,7 @@
   height: 60px;
 }
 
-/* Поиск из моего кода */
+/* Поиск */
 .search-section {
   position: relative;
   z-index: 10;
@@ -797,13 +618,44 @@
   }
 }
 
-/* Обновленные фильтры */
-.bouquets-filters {
-  margin-top: 20px;
-}
-
-/* Адаптивность для нового дизайна */
+/* Адаптивность */
 @media (max-width: 768px) {
+  .bouquet-showcase {
+    padding: 80px 20px;
+  }
+  
+  .showcase__title {
+    font-size: 2.4rem;
+  }
+  
+  .showcase__grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    margin-bottom: 80px;
+  }
+  
+  .bouquet__image {
+    height: 240px;
+  }
+  
+  .showcase__cta {
+    padding: 60px 30px;
+  }
+  
+  .cta__title {
+    font-size: 2rem;
+  }
+  
+  .cta__buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .cta__button {
+    width: 100%;
+    max-width: 300px;
+  }
+  
   .bouquets-hero {
     padding: 100px 20px 60px;
   }
@@ -836,14 +688,74 @@
     padding: 14px 0;
     font-size: 1rem;
   }
+  
+  .favorite-heart {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .favorite-heart svg {
+    width: 18px;
+    height: 18px;
+  }
 }
 
 @media (max-width: 480px) {
+  .bouquet-showcase {
+    padding: 60px 16px;
+  }
+  
+  .showcase__title {
+    font-size: 2rem;
+  }
+  
+  .showcase__header {
+    margin-bottom: 60px;
+  }
+  
+  .bouquet__info {
+    padding: 24px;
+  }
+  
+  .bouquet__footer {
+    flex-direction: column;
+    gap: 20px;
+    align-items: stretch;
+  }
+  
+  .bouquet__add-to-cart {
+    justify-content: center;
+  }
+  
+  .showcase__cta {
+    padding: 50px 24px;
+  }
+  
+  .cta__title {
+    font-size: 1.8rem;
+  }
+  
+  .cta__description {
+    font-size: 1.1rem;
+  }
+  
   .bouquets-hero h1 {
     font-size: 2.2rem;
   }
   
   .search-input-group {
     padding: 8px 15px;
+  }
+  
+  .favorite-heart {
+    width: 32px;
+    height: 32px;
+    top: 10px;
+    right: 10px;
+  }
+  
+  .favorite-heart svg {
+    width: 16px;
+    height: 16px;
   }
 }

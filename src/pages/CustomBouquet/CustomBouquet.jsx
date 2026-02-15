@@ -21,138 +21,88 @@ export default function CustomBouquet() {
   const [specialInstructions, setSpecialInstructions] = useState('');
   const [currentStep, setCurrentStep] = useState(1);
 
-  // Расширенная палитра нежных оттенков
+  // Сокращенная палитра самых красивых оттенков
   const colorPalette = {
     flowers: {
       red: [
-        { id: 'red-1', name: 'Алый', shade: 'Ярко-красный', hex: '#FF6B6B' },
-        { id: 'red-2', name: 'Бургунди', shade: 'Винно-красный', hex: '#9E4244' },
-        { id: 'red-3', name: 'Кармин', shade: 'Насыщенный красный', hex: '#D44A5E' },
-        { id: 'red-4', name: 'Коралловый', shade: 'Нежно-коралловый', hex: '#FF7F7F' },
-        { id: 'red-5', name: 'Рубиновый', shade: 'Глубокий красный', hex: '#B23B4B' },
-        { id: 'red-6', name: 'Терракотовый', shade: 'Красно-коричневый', hex: '#C96A5D' },
-        { id: 'red-7', name: 'Малиновый', shade: 'Ягодный', hex: '#D94F6F' },
-        { id: 'red-8', name: 'Розово-красный', shade: 'Нежный красный', hex: '#F08080' }
+        { id: 'red-1', name: 'Алый', shade: 'Ярко-красный', hex: '#FF4D4D' },
+        { id: 'red-2', name: 'Бургунди', shade: 'Благородный винный', hex: '#8B1E3F' },
+        { id: 'red-3', name: 'Коралловый', shade: 'Нежный коралл', hex: '#FF7F7F' },
+        { id: 'red-4', name: 'Рубиновый', shade: 'Глубокий красный', hex: '#B22222' }
       ],
       pink: [
-        { id: 'pink-1', name: 'Нежно-розовый', shade: 'Пастельный розовый', hex: '#FFD1DC' },
-        { id: 'pink-2', name: 'Пудровый', shade: 'Мятный розовый', hex: '#F7D1D1' },
-        { id: 'pink-3', name: 'Фламинго', shade: 'Ярко-розовый', hex: '#FFB6C1' },
-        { id: 'pink-4', name: 'Лососевый', shade: 'Персиково-розовый', hex: '#FF9F9F' },
-        { id: 'pink-5', name: 'Фуксия', shade: 'Насыщенный розовый', hex: '#F55C7A' },
-        { id: 'pink-6', name: 'Марсала', shade: 'Темно-розовый', hex: '#A55D5D' },
-        { id: 'pink-7', name: 'Лиловый', shade: 'Розово-сиреневый', hex: '#D8A1C4' },
-        { id: 'pink-8', name: 'Орхидея', shade: 'Нежно-лиловый', hex: '#E2B6D1' },
-        { id: 'pink-9', name: 'Жемчужный', shade: 'Перламутрово-розовый', hex: '#FDE2E2' },
-        { id: 'pink-10', name: 'Клубничный', shade: 'Светло-розовый', hex: '#FFA5A5' }
+        { id: 'pink-1', name: 'Нежно-розовый', shade: 'Пастельная роза', hex: '#FFB7C5' },
+        { id: 'pink-2', name: 'Пудровый', shade: 'Мятная роза', hex: '#F5D1D1' },
+        { id: 'pink-3', name: 'Фламинго', shade: 'Ярко-розовый', hex: '#FC8EAC' },
+        { id: 'pink-4', name: 'Фуксия', shade: 'Насыщенный розовый', hex: '#D9017A' }
       ],
       white: [
-        { id: 'white-1', name: 'Чисто-белый', shade: 'Белоснежный', hex: '#FFFFFF' },
-        { id: 'white-2', name: 'Слоновая кость', shade: 'Теплый белый', hex: '#FFFFF0' },
-        { id: 'white-3', name: 'Кремовый', shade: 'Сливочный', hex: '#FFF8E7' },
-        { id: 'white-4', name: 'Шампань', shade: 'Золотисто-бежевый', hex: '#F7E7CE' },
-        { id: 'white-5', name: 'Алебастровый', shade: 'Матмово-белый', hex: '#F2F0E6' },
-        { id: 'white-6', name: 'Жемчужный', shade: 'Перламутровый', hex: '#F0F0F0' },
-        { id: 'white-7', name: 'Молочный', shade: 'Мягкий белый', hex: '#FDF5E6' },
-        { id: 'white-8', name: 'Ванильный', shade: 'Светло-бежевый', hex: '#F3E5AB' }
+        { id: 'white-1', name: 'Белоснежный', shade: 'Чисто-белый', hex: '#FFFFFF' },
+        { id: 'white-2', name: 'Слоновая кость', shade: 'Теплый белый', hex: '#FDF5E6' },
+        { id: 'white-3', name: 'Шампань', shade: 'Золотистый бежевый', hex: '#F7E7CE' },
+        { id: 'white-4', name: 'Жемчужный', shade: 'Перламутровый', hex: '#F0F0F4' }
       ],
       yellow: [
         { id: 'yellow-1', name: 'Лимонный', shade: 'Свежий желтый', hex: '#FCE883' },
-        { id: 'yellow-2', name: 'Медовый', shade: 'Теплый желтый', hex: '#FED976' },
+        { id: 'yellow-2', name: 'Медовый', shade: 'Теплый желтый', hex: '#FFC72C' },
         { id: 'yellow-3', name: 'Шафрановый', shade: 'Золотистый', hex: '#F4C542' },
-        { id: 'yellow-4', name: 'Солнечный', shade: 'Ярко-желтый', hex: '#FFE55C' },
-        { id: 'yellow-5', name: 'Песочный', shade: 'Нежно-желтый', hex: '#F9E076' },
-        { id: 'yellow-6', name: 'Кукурузный', shade: 'Мягкий желтый', hex: '#FFEC8B' },
-        { id: 'yellow-7', name: 'Янтарный', shade: 'Темно-желтый', hex: '#FFBF00' },
-        { id: 'yellow-8', name: 'Канареечный', shade: 'Яркий желтый', hex: '#FFEF99' }
+        { id: 'yellow-4', name: 'Солнечный', shade: 'Ярко-желтый', hex: '#FFD700' }
       ],
       orange: [
-        { id: 'orange-1', name: 'Персиковый', shade: 'Нежный оранжевый', hex: '#FFDAB9' },
-        { id: 'orange-2', name: 'Абрикосовый', shade: 'Мягкий оранжевый', hex: '#FBCEB1' },
-        { id: 'orange-3', name: 'Мандариновый', shade: 'Сочный оранжевый', hex: '#FFA07A' },
-        { id: 'orange-4', name: 'Тыквенный', shade: 'Теплый оранжевый', hex: '#FF8C42' },
-        { id: 'orange-5', name: 'Коралловый', shade: 'Розово-оранжевый', hex: '#FF7F50' },
-        { id: 'orange-6', name: 'Охра', shade: 'Приглушенный оранжевый', hex: '#CC7722' },
-        { id: 'orange-7', name: 'Морковный', shade: 'Яркий оранжевый', hex: '#F28C38' },
-        { id: 'orange-8', name: 'Рыжий', shade: 'Медный оранжевый', hex: '#CB6D51' }
+        { id: 'orange-1', name: 'Персиковый', shade: 'Нежный персик', hex: '#FFDAB9' },
+        { id: 'orange-2', name: 'Мандариновый', shade: 'Сочный оранжевый', hex: '#FFA07A' },
+        { id: 'orange-3', name: 'Тыквенный', shade: 'Теплый оранжевый', hex: '#FF8C42' },
+        { id: 'orange-4', name: 'Коралловый', shade: 'Розово-оранжевый', hex: '#FF7F50' }
       ],
       purple: [
-        { id: 'purple-1', name: 'Лавандовый', shade: 'Нежно-фиолетовый', hex: '#E6E6FA' },
-        { id: 'purple-2', name: 'Сиреневый', shade: 'Мягкий фиолетовый', hex: '#D8BFD8' },
-        { id: 'purple-3', name: 'Фиалковый', shade: 'Нежный фиолетовый', hex: '#C8A2C8' },
-        { id: 'purple-4', name: 'Сливовый', shade: 'Темно-фиолетовый', hex: '#A389B4' },
-        { id: 'purple-5', name: 'Аметистовый', shade: 'Прозрачно-фиолетовый', hex: '#9966CC' },
-        { id: 'purple-6', name: 'Глициниевый', shade: 'Светло-сиреневый', hex: '#C9A9DC' },
-        { id: 'purple-7', name: 'Баклажановый', shade: 'Темно-сиреневый', hex: '#6A4E6F' },
-        { id: 'purple-8', name: 'Орхидейный', shade: 'Розово-фиолетовый', hex: '#DA70D6' }
+        { id: 'purple-1', name: 'Лавандовый', shade: 'Нежный фиолетовый', hex: '#E6E6FA' },
+        { id: 'purple-2', name: 'Сиреневый', shade: 'Мягкий фиолетовый', hex: '#C8A2C8' },
+        { id: 'purple-3', name: 'Аметистовый', shade: 'Прозрачный фиолетовый', hex: '#9966CC' },
+        { id: 'purple-4', name: 'Сливовый', shade: 'Благородный фиолетовый', hex: '#673147' }
       ],
       blue: [
-        { id: 'blue-1', name: 'Небесный', shade: 'Светло-голубой', hex: '#B0E0E6' },
+        { id: 'blue-1', name: 'Небесный', shade: 'Светло-голубой', hex: '#87CEEB' },
         { id: 'blue-2', name: 'Васильковый', shade: 'Ярко-голубой', hex: '#6495ED' },
-        { id: 'blue-3', name: 'Бирюзовый', shade: 'Голубовато-зеленый', hex: '#40E0D0' },
-        { id: 'blue-4', name: 'Лазурный', shade: 'Прозрачно-голубой', hex: '#007FFF' },
-        { id: 'blue-5', name: 'Джинсовый', shade: 'Темно-синий', hex: '#5D7B9D' },
-        { id: 'blue-6', name: 'Мятный', shade: 'Нежно-голубой', hex: '#B2F0E5' },
-        { id: 'blue-7', name: 'Аквамарин', shade: 'Морской', hex: '#7FFFD4' },
-        { id: 'blue-8', name: 'Кобальтовый', shade: 'Насыщенный синий', hex: '#0047AB' },
-        { id: 'blue-9', name: 'Полуночный', shade: 'Глубокий синий', hex: '#191970' }
+        { id: 'blue-3', name: 'Бирюзовый', shade: 'Морской', hex: '#40E0D0' },
+        { id: 'blue-4', name: 'Сапфировый', shade: 'Глубокий синий', hex: '#0F52BA' }
       ],
       green: [
         { id: 'green-1', name: 'Мятный', shade: 'Свежий зеленый', hex: '#98FB98' },
-        { id: 'green-2', name: 'Фитста', shade: 'Салатовый', hex: '#CAE7D9' },
-        { id: 'green-3', name: 'Оливковый', shade: 'Мягкий зеленый', hex: '#BAB86C' },
-        { id: 'green-4', name: 'Изумрудный', shade: 'Насыщенный зеленый', hex: '#50C878' },
-        { id: 'green-5', name: 'Лаймовый', shade: 'Ярко-зеленый', hex: '#BFFF00' },
-        { id: 'green-6', name: 'Шалфейный', shade: 'Приглушенный зеленый', hex: '#9DC183' },
-        { id: 'green-7', name: 'Мох', shade: 'Темно-зеленый', hex: '#4A5D23' },
-        { id: 'green-8', name: 'Хвойный', shade: 'Лесной зеленый', hex: '#2C4A2B' }
+        { id: 'green-2', name: 'Изумрудный', shade: 'Благородный зеленый', hex: '#50C878' },
+        { id: 'green-3', name: 'Оливковый', shade: 'Мягкий зеленый', hex: '#808000' },
+        { id: 'green-4', name: 'Фитста', shade: 'Салатовый', hex: '#B4D3B2' }
       ]
     },
     packaging: {
       film: [
         { id: 'film-1', name: 'Прозрачный кристалл', shade: 'Чистая прозрачность', hex: '#F8F8FF' },
-        { id: 'film-2', name: 'Матированный жемчуг', shade: 'Нежно-матовый', hex: '#F0F0F0' },
-        { id: 'film-3', name: 'Розовый туман', shade: 'Нежно-розовый', hex: '#FFD9E6' },
-        { id: 'film-4', name: 'Голубая лагуна', shade: 'Мятно-голубой', hex: '#B0E0E6' },
-        { id: 'film-5', name: 'Лавандовый сон', shade: 'Светло-сиреневый', hex: '#E6D8F0' },
-        { id: 'film-6', name: 'Золотистый рассвет', shade: 'Теплый золотой', hex: '#FFF0D0' },
-        { id: 'film-7', name: 'Серебряный иней', shade: 'Холодный серебристый', hex: '#E0E0E0' },
-        { id: 'film-8', name: 'Персиковый нектар', shade: 'Нежно-персиковый', hex: '#FFE5B4' }
+        { id: 'film-2', name: 'Розовый туман', shade: 'Нежно-розовый', hex: '#FFD9E6' },
+        { id: 'film-3', name: 'Голубая лагуна', shade: 'Мятно-голубой', hex: '#B0E0E6' },
+        { id: 'film-4', name: 'Золотистый рассвет', shade: 'Теплый золотой', hex: '#FFF0D0' }
       ],
       paper: [
-        { id: 'paper-1', name: 'Крафт натуральный', shade: 'Эко-стиль', hex: '#C4A484' },
-        { id: 'paper-2', name: 'Рисовая бумага', shade: 'Нежно-бежевый', hex: '#FAF0E6' },
+        { id: 'paper-1', name: 'Крафт', shade: 'Натуральный', hex: '#C4A484' },
+        { id: 'paper-2', name: 'Рисовая', shade: 'Нежно-бежевая', hex: '#FAF0E6' },
         { id: 'paper-3', name: 'Мраморная', shade: 'Белая с прожилками', hex: '#F5F5F5' },
-        { id: 'paper-4', name: 'Пастельно-розовая', shade: 'Нежный розовый', hex: '#FFD9E6' },
-        { id: 'paper-5', name: 'Мятная свежесть', shade: 'Светло-мятный', hex: '#D1F0E0' },
-        { id: 'paper-6', name: 'Лавандовое поле', shade: 'Светло-сиреневый', hex: '#E0D0F0' },
-        { id: 'paper-7', name: 'Золотая пыль', shade: 'С шиммером', hex: '#F5E6D3' },
-        { id: 'paper-8', name: 'Жемчужная', shade: 'Перламутровый', hex: '#F0F0F0' }
+        { id: 'paper-4', name: 'Жемчужная', shade: 'Перламутровая', hex: '#F0F0F0' }
       ],
       boxes: [
         { id: 'box-1', name: 'Классическая белая', shade: 'Чисто-белая', hex: '#FFFFFF' },
-        { id: 'box-2', name: 'Нежно-розовая', shade: 'Пудровый', hex: '#F7D1D1' },
-        { id: 'box-3', name: 'Голубая мечта', shade: 'Пастельно-голубой', hex: '#C0E0F0' },
-        { id: 'box-4', name: 'Сиреневый туман', shade: 'Светло-сиреневый', hex: '#D8C0E0' },
-        { id: 'box-5', name: 'Золотая осень', shade: 'Теплый бежевый', hex: '#F0D8B0' },
-        { id: 'box-6', name: 'Мятный коктейль', shade: 'Светло-зеленый', hex: '#C0E0D0' }
+        { id: 'box-2', name: 'Нежно-розовая', shade: 'Пудровая', hex: '#F7D1D1' },
+        { id: 'box-3', name: 'Голубая', shade: 'Пастельно-голубая', hex: '#C0E0F0' },
+        { id: 'box-4', name: 'Золотая', shade: 'Праздничная', hex: '#F0D8B0' }
       ]
     },
     bows: [
-      { id: 'bow-1', name: 'Атласный', shade: 'Нежно-розовый', hex: '#FFD1DC' },
-      { id: 'bow-2', name: 'Атласный', shade: 'Голубой', hex: '#B0E0E6' },
-      { id: 'bow-3', name: 'Атласный', shade: 'Сиреневый', hex: '#D8BFD8' },
+      { id: 'bow-1', name: 'Атласный', shade: 'Нежно-розовый', hex: '#FFB7C5' },
+      { id: 'bow-2', name: 'Атласный', shade: 'Голубой', hex: '#87CEEB' },
+      { id: 'bow-3', name: 'Атласный', shade: 'Сиреневый', hex: '#C8A2C8' },
       { id: 'bow-4', name: 'Атласный', shade: 'Персиковый', hex: '#FFDAB9' },
-      { id: 'bow-5', name: 'Атласный', shade: 'Мятный', hex: '#C0F0E0' },
-      { id: 'bow-6', name: 'Атласный', shade: 'Жемчужный', hex: '#F0F0F0' },
-      { id: 'bow-7', name: 'Бархатный', shade: 'Бургунди', hex: '#9E4244' },
+      { id: 'bow-5', name: 'Атласный', shade: 'Жемчужный', hex: '#F0F0F0' },
+      { id: 'bow-6', name: 'Атласный', shade: 'Золотистый', hex: '#FFD700' },
+      { id: 'bow-7', name: 'Бархатный', shade: 'Бургунди', hex: '#8B1E3F' },
       { id: 'bow-8', name: 'Бархатный', shade: 'Изумрудный', hex: '#50C878' },
-      { id: 'bow-9', name: 'Бархатный', shade: 'Сапфировый', hex: '#0047AB' },
-      { id: 'bow-10', name: 'Бархатный', shade: 'Сливовый', hex: '#6A4E6F' },
-      { id: 'bow-11', name: 'Органзовый', shade: 'Прозрачный розовый', hex: '#FFE0F0' },
-      { id: 'bow-12', name: 'Органзовый', shade: 'Прозрачный голубой', hex: '#E0F0FF' },
-      { id: 'bow-13', name: 'Органзовый', shade: 'Золотистый', hex: '#FFF0D0' },
-      { id: 'bow-14', name: 'Органзовый', shade: 'Серебристый', hex: '#F0F0F0' }
+      { id: 'bow-9', name: 'Бархатный', shade: 'Сапфировый', hex: '#0F52BA' }
     ]
   };
 
@@ -937,13 +887,13 @@ export default function CustomBouquet() {
 
 function getColorHex(color) {
   const colorMap = {
-    'red': '#FF6B6B',
+    'red': '#FF4D4D',
     'white': '#FFFFFF',
-    'pink': '#FFD1DC',
+    'pink': '#FFB7C5',
     'yellow': '#FCE883',
     'purple': '#E6E6FA',
     'orange': '#FFDAB9',
-    'blue': '#B0E0E6',
+    'blue': '#87CEEB',
     'green': '#98FB98',
     'brown': '#C4A484',
     'gold': '#FFD700',

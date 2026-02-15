@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import ProductCard from '../../components/ProductCard/ProductCard';
 import './Compositions.css';
 
@@ -41,7 +41,6 @@ export default function Compositions() {
   const [searchTimeout, setSearchTimeout] = useState(null);
   const [isSearching, setIsSearching] = useState(false);
 
-  // Дебаунс для поиска
   const handleSearchChange = useCallback((value) => {
     setSearchQuery(value);
     setIsSearching(true);
@@ -57,7 +56,6 @@ export default function Compositions() {
     setSearchTimeout(timeout);
   }, [searchTimeout]);
 
-  // Очистка поиска
   const handleClearSearch = useCallback(() => {
     setSearchQuery('');
     setIsSearching(false);
@@ -66,7 +64,6 @@ export default function Compositions() {
     }
   }, [searchTimeout]);
 
-  // Загрузка композиций из БД
   useEffect(() => {
     const fetchCompositions = async () => {
       try {
@@ -82,10 +79,9 @@ export default function Compositions() {
         const result = await response.json();
         
         if (result.success) {
-          // Добавляем дополнительную информацию для композиций
           const compositions = result.data.map(product => ({
             ...product,
-            isComposition: true, // Флаг для отличия от букетов
+            isComposition: true,
             typeLabel: 'Композиция'
           }));
           
@@ -104,7 +100,6 @@ export default function Compositions() {
     fetchCompositions();
   }, []);
 
-  // Фильтрация и сортировка
   useEffect(() => {
     if (!products.length) {
       setFilteredProducts([]);
@@ -113,17 +108,13 @@ export default function Compositions() {
 
     let filtered = [...products];
 
-    // Фильтрация по категории
     if (selectedCategory !== 'all') {
       const selectedCat = categories.find(cat => cat.id === selectedCategory);
-      if (selectedCat && selectedCat.dbField) {
+      if (selectedCat?.dbField) {
         filtered = filtered.filter(product => {
-          const categorySlug = product.category?.slug;
           const categoryName = product.category?.name?.toLowerCase();
-          const productType = product.type;
-          
           return (
-            categorySlug === selectedCat.id ||
+            product.category?.slug === selectedCat.id ||
             categoryName === selectedCat.dbField ||
             (selectedCat.dbField === 'exotic' && categoryName?.includes('экзотич')) ||
             (selectedCat.dbField === 'minimalist' && categoryName?.includes('минимал'))
@@ -132,7 +123,6 @@ export default function Compositions() {
       }
     }
 
-    // Фильтрация по цене
     if (selectedPrice !== 'all') {
       const priceRange = priceRanges.find(range => range.id === selectedPrice);
       filtered = filtered.filter(product => {
@@ -142,7 +132,6 @@ export default function Compositions() {
       });
     }
 
-    // Поиск по названию и описанию
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(product => 
@@ -152,27 +141,17 @@ export default function Compositions() {
       );
     }
 
-    // Сортировка
     switch (sortBy) {
       case 'price-asc':
-        filtered.sort((a, b) => {
-          const priceA = typeof a.price === 'number' ? a.price : parseFloat(a.price) || 0;
-          const priceB = typeof b.price === 'number' ? b.price : parseFloat(b.price) || 0;
-          return priceA - priceB;
-        });
+        filtered.sort((a, b) => (parseFloat(a.price) || 0) - (parseFloat(b.price) || 0));
         break;
       case 'price-desc':
-        filtered.sort((a, b) => {
-          const priceA = typeof a.price === 'number' ? a.price : parseFloat(a.price) || 0;
-          const priceB = typeof b.price === 'number' ? b.price : parseFloat(b.price) || 0;
-          return priceB - priceA;
-        });
+        filtered.sort((a, b) => (parseFloat(b.price) || 0) - (parseFloat(a.price) || 0));
         break;
       case 'name':
         filtered.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
         break;
       default:
-        // Сортировка по дате создания (новые первыми)
         filtered.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
         break;
     }
@@ -192,8 +171,6 @@ export default function Compositions() {
   }, [searchTimeout]);
 
   const handleQuickView = (product) => {
-    // Реализация быстрого просмотра
-    console.log('Быстрый просмотр композиции:', product);
     alert(`Быстрый просмотр: ${product.name}\nЦена: ${product.price} ₽\nТип: Композиция`);
   };
 
@@ -215,7 +192,6 @@ export default function Compositions() {
   return (
     <div className="compositions-page">
       <div className="container">
-        {/* Hero секция с баннером */}
         <section className="compositions-hero">
           <div className="compositions-hero-content">
             <div className="hero-decoration">
@@ -234,7 +210,6 @@ export default function Compositions() {
           </div>
         </section>
 
-        {/* Поиск */}
         <section className="search-section">
           <div className="search-container">
             <div className="search-input-group">
@@ -257,17 +232,13 @@ export default function Compositions() {
                   </svg>
                 </button>
               )}
-              {isSearching && (
-                <div className="search-spinner"></div>
-              )}
+              {isSearching && <div className="search-spinner"></div>}
             </div>
           </div>
         </section>
 
-        {/* Фильтры и поиск */}
         <section className="compositions-filters">
           <div className="filters-grid">
-            {/* Категории */}
             <div className="filter-group">
               <label className="filter-label">Категория</label>
               <div className="category-filters">
@@ -285,7 +256,6 @@ export default function Compositions() {
               </div>
             </div>
 
-            {/* Цена и сортировка */}
             <div className="filter-row">
               <div className="filter-group price-group">
                 <label className="filter-label">Ценовой диапазон</label>
@@ -348,7 +318,6 @@ export default function Compositions() {
             </div>
           </div>
 
-          {/* Результаты фильтрации */}
           <div className="filter-results">
             <div className="results-info">
               <p className="results-count">
@@ -374,7 +343,6 @@ export default function Compositions() {
           </div>
         </section>
 
-        {/* Сетка товаров */}
         <section className="compositions-grid-section">
           {loading ? (
             <div className="loading-container">
@@ -407,7 +375,7 @@ export default function Compositions() {
             </div>
           ) : (
             <div className="products-grid">
-              {filteredProducts.map((product, index) => (
+              {filteredProducts.map((product) => (
                 <ProductCard
                   key={product.id}
                   product={{
@@ -415,7 +383,6 @@ export default function Compositions() {
                     typeLabel: 'Композиция',
                     badgeType: 'composition'
                   }}
-                  index={index}
                   onQuickView={handleQuickView}
                   showTypeBadge={true}
                 />
@@ -424,7 +391,6 @@ export default function Compositions() {
           )}
         </section>
 
-        {/* CTA секция */}
         <section className="compositions-cta">
           <div className="cta-content">
             <h2>Хотите уникальную композицию?</h2>
@@ -433,8 +399,8 @@ export default function Compositions() {
               <a href="/custom-composition" className="cta-button primary">
                 Заказать индивидуальный дизайн
               </a>
-              <a href="/consultation" className="cta-button secondary">
-                Получить консультацию флориста
+              <a href="/delivery" className="cta-button secondary">
+                Узнать о доставке
               </a>
             </div>
           </div>

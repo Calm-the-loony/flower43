@@ -2,7 +2,6 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import ProductCard from '../../components/ProductCard/ProductCard';
 import './Bouquets.css';
 
-// Используем правильные категории на основе данных из БД
 const categories = [
   { id: 'all', name: 'Все букеты', dbField: null },
   { id: 'romantic-bouquets', name: 'Романтические', dbField: 'romantic' },
@@ -40,7 +39,6 @@ export default function Bouquets() {
   const [searchTimeout, setSearchTimeout] = useState(null);
   const [isSearching, setIsSearching] = useState(false);
 
-  // Дебаунс для поиска
   const handleSearchChange = useCallback((value) => {
     setSearchQuery(value);
     setIsSearching(true);
@@ -56,7 +54,6 @@ export default function Bouquets() {
     setSearchTimeout(timeout);
   }, [searchTimeout]);
 
-  // Очистка поиска
   const handleClearSearch = useCallback(() => {
     setSearchQuery('');
     setIsSearching(false);
@@ -65,7 +62,6 @@ export default function Bouquets() {
     }
   }, [searchTimeout]);
 
-  // Загрузка товаров из БД
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -81,7 +77,6 @@ export default function Bouquets() {
         const result = await response.json();
         
         if (result.success) {
-          // Фильтруем только букеты и композиции, исключаем растения
           const bouquetsOnly = result.data.filter(product => 
             product.type === 'bouquet' || product.type === 'composition'
           );
@@ -101,7 +96,6 @@ export default function Bouquets() {
     fetchProducts();
   }, []);
 
-  // Фильтрация и сортировка
   useEffect(() => {
     if (!products.length) {
       setFilteredProducts([]);
@@ -110,7 +104,6 @@ export default function Bouquets() {
 
     let filtered = [...products];
 
-    // Фильтрация по категории
     if (selectedCategory !== 'all') {
       const selectedCat = categories.find(cat => cat.id === selectedCategory);
       if (selectedCat && selectedCat.dbField) {
@@ -129,7 +122,6 @@ export default function Bouquets() {
       }
     }
 
-    // Фильтрация по цене
     if (selectedPrice !== 'all') {
       const priceRange = priceRanges.find(range => range.id === selectedPrice);
       filtered = filtered.filter(product => {
@@ -139,7 +131,6 @@ export default function Bouquets() {
       });
     }
 
-    // Поиск по названию и описанию
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(product => 
@@ -149,7 +140,6 @@ export default function Bouquets() {
       );
     }
 
-    // Сортировка
     switch (sortBy) {
       case 'price-asc':
         filtered.sort((a, b) => {
@@ -169,7 +159,6 @@ export default function Bouquets() {
         filtered.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
         break;
       default:
-        // Сортировка по дате создания (новые первыми)
         filtered.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
         break;
     }
@@ -189,7 +178,6 @@ export default function Bouquets() {
   }, [searchTimeout]);
 
   const handleQuickView = (product) => {
-    // Реализация быстрого просмотра
     console.log('Быстрый просмотр:', product);
     alert(`Быстрый просмотр: ${product.name}\nЦена: ${product.price} ₽`);
   };
@@ -212,7 +200,6 @@ export default function Bouquets() {
   return (
     <div className="bouquets-page">
       <div className="container">
-        {/* Hero секция с баннером */}
         <section className="bouquets-hero">
           <div className="bouquets-hero-content">
             <div className="hero-decoration">
@@ -231,7 +218,6 @@ export default function Bouquets() {
           </div>
         </section>
 
-        {/* Поиск без иконки */}
         <section className="search-section">
           <div className="search-container">
             <div className="search-input-group">
@@ -261,10 +247,8 @@ export default function Bouquets() {
           </div>
         </section>
 
-        {/* Фильтры и поиск */}
         <section className="bouquets-filters">
           <div className="filters-grid">
-            {/* Категории */}
             <div className="filter-group">
               <label className="filter-label">Категория</label>
               <div className="category-filters">
@@ -282,7 +266,6 @@ export default function Bouquets() {
               </div>
             </div>
 
-            {/* Цена и сортировка */}
             <div className="filter-row">
               <div className="filter-group price-group">
                 <label className="filter-label">Ценовой диапазон</label>
@@ -345,7 +328,6 @@ export default function Bouquets() {
             </div>
           </div>
 
-          {/* Результаты фильтрации */}
           <div className="filter-results">
             <div className="results-info">
               <p className="results-count">
@@ -371,7 +353,6 @@ export default function Bouquets() {
           </div>
         </section>
 
-        {/* Сетка товаров */}
         <section className="bouquets-grid-section">
           {loading ? (
             <div className="loading-container">
@@ -416,7 +397,6 @@ export default function Bouquets() {
           )}
         </section>
 
-        {/* CTA секция */}
         <section className="bouquets-cta">
           <div className="cta-content">
             <h2>Не нашли подходящий букет?</h2>

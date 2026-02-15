@@ -39,7 +39,6 @@
   line-height: 1.6;
 }
 
-/* Фильтры - улучшенный дизайн */
 .bouquets-filters {
   background: white;
   border-radius: 20px;
@@ -55,7 +54,6 @@
   gap: 30px;
 }
 
-/* Поиск - шире */
 .search-box-wide {
   margin-bottom: 10px;
 }
@@ -110,7 +108,6 @@
   color: #E74C3C;
 }
 
-/* Категории - улучшенные */
 .filter-group {
   display: flex;
   flex-direction: column;
@@ -173,7 +170,6 @@
   display: block;
 }
 
-/* Ценовые опции */
 .price-group {
   flex: 1;
 }
@@ -207,7 +203,6 @@
   color: white;
 }
 
-/* Сортировка кнопками */
 .sort-options {
   display: flex;
   gap: 10px;
@@ -238,7 +233,6 @@
   color: white;
 }
 
-/* Строка фильтров */
 .filter-row {
   display: flex;
   gap: 30px;
@@ -275,7 +269,6 @@
   font-size: 1.1rem;
 }
 
-/* Результаты фильтрации */
 .filter-results {
   display: flex;
   justify-content: space-between;
@@ -319,7 +312,6 @@
   color: white;
 }
 
-/* Сетка товаров - улучшенные карточки */
 .products-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -338,7 +330,6 @@
   }
 }
 
-/* Стили для ProductCard (добавьте в ProductCard.css или здесь) */
 .product-card-enhanced {
   background: white;
   border-radius: 20px;
@@ -538,7 +529,6 @@
   box-shadow: 0 6px 20px rgba(139, 201, 161, 0.4);
 }
 
-/* Нет результатов - без изменений */
 .no-results {
   text-align: center;
   padding: 80px 20px;
@@ -566,7 +556,6 @@
   font-size: 1.1rem;
 }
 
-/* CTA секция - без изменений */
 .bouquets-cta {
   background: linear-gradient(135deg, #8BC9A1 0%, #7AB890 100%);
   padding: 60px 40px;
@@ -629,7 +618,6 @@
   transform: translateY(-2px);
 }
 
-/* Адаптивность */
 @media (max-width: 768px) {
   .bouquets-page {
     padding: 80px 0 40px;
