@@ -33,26 +33,17 @@ function Hero() {
         <div className="hero__image">
           <div className="flower__illustration">
             <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
-              {/* Основной цветок */}
               <circle cx="200" cy="200" r="80" fill="#8BC9A1" stroke="#C7A7E7" strokeWidth="4"/>
               <circle cx="200" cy="200" r="50" fill="#F5ECD7" stroke="#8BC9A1" strokeWidth="3"/>
-              
-              {/* Лепестки */}
               <circle cx="140" cy="160" r="25" fill="#C7A7E7" stroke="#8BC9A1" strokeWidth="2"/>
               <circle cx="260" cy="160" r="25" fill="#C7A7E7" stroke="#8BC9A1" strokeWidth="2"/>
               <circle cx="140" cy="240" r="25" fill="#A8D5BA" stroke="#8BC9A1" strokeWidth="2"/>
               <circle cx="260" cy="240" r="25" fill="#A8D5BA" stroke="#8BC9A1" strokeWidth="2"/>
-              
-              {/* Декоративные элементы */}
               <circle cx="120" cy="120" r="15" fill="#C7A7E7" opacity="0.6"/>
               <circle cx="280" cy="120" r="15" fill="#A8D5BA" opacity="0.6"/>
               <circle cx="120" cy="280" r="15" fill="#8BC9A1" opacity="0.6"/>
               <circle cx="280" cy="280" r="15" fill="#C7A7E7" opacity="0.6"/>
-              
-              {/* Стебель */}
               <rect x="195" y="280" width="10" height="80" fill="#8BC9A1" rx="5"/>
-              
-              {/* Листья */}
               <ellipse cx="170" cy="320" rx="20" ry="8" fill="#A8D5BA" transform="rotate(-30 170 320)"/>
               <ellipse cx="230" cy="320" rx="20" ry="8" fill="#A8D5BA" transform="rotate(30 230 320)"/>
             </svg>
