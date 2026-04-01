@@ -8,5 +8,6 @@ router.get('/plants', productController.getPlants);  // Этот маршрут
 router.get('/compositions', productController.getCompositions);
 router.get('/all', productController.getAllProducts);
 router.post('/save', productController.createOrUpdateProduct);
+router.get('/detail/:slug', productController.getDetailProductDataController)
 
 module.exports = router;

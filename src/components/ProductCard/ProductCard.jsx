@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+
 import { useCart } from '../../context/CartContext';
 import { useFavorites } from '../../context/FavoritesContext';
+import { normalizePrice } from '../../utils/normalizePrice';
 import './ProductCard.css';
 
 const ProductCard = ({ product, onQuickView }) => {
@@ -15,6 +17,7 @@ const ProductCard = ({ product, onQuickView }) => {
 
   const {
     id,
+    slug,
     name,
     price,
     original_price,
@@ -131,16 +134,6 @@ const ProductCard = ({ product, onQuickView }) => {
 
   const isOnSale = original_price && original_price > price;
 
-  const normalizePrice = (priceValue) => {
-    if (typeof priceValue === 'number') return priceValue;
-    if (typeof priceValue === 'string') {
-      const cleaned = priceValue.toString().replace(/\s/g, '').replace('₽', '');
-      const parsed = parseFloat(cleaned);
-      return isNaN(parsed) ? 0 : parsed;
-    }
-    return 0;
-  };
-
   const handleAddToCart = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -193,7 +186,7 @@ const ProductCard = ({ product, onQuickView }) => {
   return (
     <div className={`product-card ${!in_stock ? 'out-of-stock' : ''}`}>
       <div className="product-card__content-wrapper">
-        <Link to={`/product/${id}`} className="product-card__image-link">
+        <Link to={`/product/${slug}`} className="product-card__image-link">
           <div className="product-card__image">
             <img 
               src={imageUrl}
@@ -257,7 +250,7 @@ const ProductCard = ({ product, onQuickView }) => {
         </Link>
 
         <div className="product-card__content">
-          <Link to={`/product/${id}`} className="product-card__text-link">
+          <Link to={`/product/${slug}`} className="product-card__text-link">
             <h3 className="product-card__name">{name}</h3>
             <p className="product-card__description">
               {description || `Красивый ${getProductTypeText()} для особого момента`}

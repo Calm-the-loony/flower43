@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import './CustomBouquet.css';
+import { apiUrl } from '../../utils/apiConfig';
 
 export default function CustomBouquet() {
   const { addToCart } = useCart();
@@ -121,7 +122,7 @@ export default function CustomBouquet() {
       setLoading(true);
       setError(null);
       
-      const response = await fetch('http://localhost:5000/api/bouquet-components');
+      const response = await fetch(`${apiUrl}/bouquet-components`);
       
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);

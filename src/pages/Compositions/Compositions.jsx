@@ -1,6 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+
+import { DetailFlowerModal } from '../../components/DetailFlowerModal';
 import ProductCard from '../../components/ProductCard/ProductCard';
 import './Compositions.css';
+import { apiUrl } from '../../utils/apiConfig';
 
 const categories = [
   { id: 'all', name: 'Все композиции', dbField: null },
@@ -29,10 +32,12 @@ const sortOptions = [
 ];
 
 export default function Compositions() {
+
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [viewDetail, setViewDetail] = useState();
   
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedPrice, setSelectedPrice] = useState('all');
@@ -70,7 +75,7 @@ export default function Compositions() {
         setLoading(true);
         setError(null);
         
-        const response = await fetch('http://localhost:5000/api/products/compositions');
+        const response = await fetch(`${apiUrl}/products/compositions`);
         
         if (!response.ok) {
           throw new Error(`Ошибка сервера: ${response.status}`);
@@ -171,7 +176,7 @@ export default function Compositions() {
   }, [searchTimeout]);
 
   const handleQuickView = (product) => {
-    alert(`Быстрый просмотр: ${product.name}\nЦена: ${product.price} ₽\nТип: Композиция`);
+    setViewDetail(product);
   };
 
   const getDisplayedProductsCount = () => {
@@ -406,6 +411,10 @@ export default function Compositions() {
           </div>
         </section>
       </div>
+
+      { viewDetail && (
+        <DetailFlowerModal product={viewDetail} typeFlower="Сборка" handleClose={() => setViewDetail(null)} />
+      ) }
     </div>
   );
 }

@@ -1,7 +1,9 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect, useCallback } from 'react';
+
+import { DetailFlowerModal } from '../../components/DetailFlowerModal';
 import ProductCard from '../../components/ProductCard/ProductCard';
 import './Plants.css';
+import { apiUrl } from '../../utils/apiConfig';
 
 const categories = [
   { id: 'all', name: 'Все растения', dbField: null },
@@ -37,10 +39,12 @@ const sortOptions = [
 ];
 
 export default function Plants() {
+
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [viewDetail, setViewDetail] = useState();
   
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedPrice, setSelectedPrice] = useState('all');
@@ -82,7 +86,7 @@ export default function Plants() {
         setLoading(true);
         setError(null);
         
-        const response = await fetch('http://localhost:5000/api/products/plants');
+        const response = await fetch(`${apiUrl}/products/plants`);
         
         if (!response.ok) {
           throw new Error(`Ошибка сервера: ${response.status}`);
@@ -226,14 +230,7 @@ export default function Plants() {
   }, [searchTimeout]);
 
   const handleQuickView = (plant) => {
-    console.log('Быстрый просмотр растения:', plant);
-    const message = `Быстрый просмотр: ${plant.name}
-Цена: ${plant.price} ₽
-${plant.care_level ? `Уход: ${plant.care_level}` : ''}
-${plant.height ? `Высота: ${plant.height}` : ''}
-${plant.light ? `Освещение: ${plant.light}` : ''}`;
-    
-    alert(message);
+    setViewDetail(plant);
   };
 
   const getDisplayedProductsCount = () => {
@@ -453,7 +450,9 @@ ${plant.light ? `Освещение: ${plant.light}` : ''}`;
             </div>
           )}
         </section>
-
+        { viewDetail && (
+          <DetailFlowerModal product={viewDetail} typeFlower="Растения" handleClose={() => setViewDetail(null) } />
+        ) }
       </div>
     </div>
   );

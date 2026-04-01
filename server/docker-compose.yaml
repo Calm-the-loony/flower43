@@ -1,0 +1,30 @@
+services:
+  flowerapi:
+    container_name: flowerapi
+    build: .
+    ports:
+      - 5000:5000
+    depends_on:
+      - flowerdb
+    networks:
+      - flower
+    
+  flowerdb:
+    image: mysql:latest
+    restart: always
+    environment:
+        MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+        MYSQL_DATABASE: ${DB_NAME}
+    ports:
+        - "3315:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - flower
+
+volumes:
+  mysql_data:
+
+networks:
+  flower:
+    driver: bridge

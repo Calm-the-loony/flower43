@@ -1,4 +1,5 @@
 const pool = require('../config/db');
+const {localeSeason, localeSize, localeStyle} = require('../utils/index');
 
 const processImages = (images) => {
   if (!images) return ['/images/placeholder-flower.jpg'];
@@ -30,12 +31,12 @@ const processImages = (images) => {
   }
 };
 
-const getProductsByType = async (type = null) => {
-  try {
-    let query = `
+const getDetailProductData = async (slug = '') => {
+  const query = `
       SELECT 
         p.id,
         p.name,
+        p.slug,
         p.price,
         p.original_price,
         p.description,
@@ -45,6 +46,96 @@ const getProductsByType = async (type = null) => {
         p.in_stock,
         p.is_customizable,
         p.created_at,
+        p.tags,
+        p.style,
+        p.size,
+        p.season,
+        p.weight_grams,
+        p.height_cm,
+        p.in_stock,
+        p.stock_quantity,
+        p.is_customizable,
+        p.care_instructions,
+        p.sales_count,
+        c.name as category_name,
+        c.slug as category_slug,
+        pc.quantity as quantity_comp,
+        pc.is_required as quantity_required_comp,
+        bc.name as name_comp,
+        bc.type as type_comp,
+        bc.price as price_comp,
+        bc.color as color_comp,
+        bc.description as description_comp,
+        bc.image as image_comp,
+        bc.seasonality seasonality_comp
+      FROM products p
+      LEFT JOIN categories c ON p.category_id = c.id
+      LEFT JOIN product_components pc ON pc.product_id = p.id
+      LEFT JOIN bouquet_components bc ON bc.id = pc.component_id
+      WHERE p.slug = ?
+    `;
+
+    const [product] = await pool.query(query, [slug]);
+
+    return { 
+      product: {
+        name: product[0]?.name ?? '',
+        slug: product[0].slug,
+        price: product[0].price,
+        original_price: product[0].original_price,
+        description: product[0].description,
+        images: processImages(product[0].images),
+        type: product[0].type,
+        in_stock: product[0].in_stock,
+        is_customizable: product[0].is_customizable,
+        created_at: product[0].created_at,
+        tags: product[0].tags,
+        style: localeStyle(product[0].style),
+        size: localeStyle(product[0].size),
+        season: localeSeason(product[0].season),
+        weight: product[0].weight_grams,
+        height: product[0].height_cm,
+        stock_quantity: product[0].stock_quantity,
+        care_instructions: product[0].care_instructions,
+        sales_count: product[0].sales_count,
+        category_name: product[0].category_name
+      },
+      components: product.map(pr => ({
+        quantity: pr.quantity_comp,
+        is_required: pr.quantity_required_comp,
+        name: pr.name_comp,
+        type: pr.type_comp,
+        price: pr.price_comp,
+        color: pr.color_comp,
+        description: pr.description_comp,
+        image: pr.image_comp,
+        seasonality: pr.seasonality_comp
+      }))
+    }
+}
+
+const getProductsByType = async (type = null) => {
+  try {
+    let query = `
+      SELECT 
+        p.id,
+        p.name,
+        p.slug,
+        p.price,
+        p.original_price,
+        p.description,
+        p.images,
+        p.category_id,
+        p.type,
+        p.in_stock,
+        p.is_customizable,
+        p.created_at,
+        p.tags,
+        p.style,
+        p.size,
+        p.season,
+        p.weight_grams,
+        p.height_cm,
         c.name as category_name,
         c.slug as category_slug
       FROM products p
@@ -66,6 +157,7 @@ const getProductsByType = async (type = null) => {
     return products.map(product => ({
       id: product.id,
       name: product.name,
+      slug: product.slug,
       price: parseFloat(product.price) || 0,
       original_price: product.original_price ? parseFloat(product.original_price) : null,
       description: product.description || `Красивый ${type === 'plant' ? 'растение' : type === 'composition' ? 'композиция' : 'букет'} для особого момента`,
@@ -79,7 +171,13 @@ const getProductsByType = async (type = null) => {
       type: product.type || 'bouquet',
       in_stock: Boolean(product.in_stock),
       is_customizable: Boolean(product.is_customizable),
-      created_at: product.created_at
+      created_at: product.created_at,
+      tags: product.tags ?? [],
+      style: localeStyle(product.style),
+      size: localeSize(product.size),
+      season: localeSeason(product.season),
+      weight: product.weight_grams,
+      height: product.height_cm
     }));
   } catch (error) {
     console.error('Ошибка получения продуктов:', error);
@@ -128,6 +226,18 @@ const getPlants = async (req, res) => {
     });
   }
 };
+
+const getDetailProductDataController = async (req, res) => {
+  const productData = await getDetailProductData(req.params.slug);
+
+  if (productData) {
+    return res.json(productData);
+  } else {
+    res.status(404).json({
+      message: 'Продукт не был найден'
+    })
+  }
+}
 
 const getCompositions = async (req, res) => {
   try {
@@ -183,6 +293,13 @@ const getFeaturedProducts = async (req, res) => {
         p.original_price,
         p.description,
         p.images,
+        p.slug,
+        p.weight_grams,
+        p.height_cm,
+        p.style,
+        p.season,
+        p.size,
+        p.tags,
         p.category_id,
         p.type,
         p.in_stock,
@@ -210,7 +327,14 @@ const getFeaturedProducts = async (req, res) => {
       },
       type: product.type || 'bouquet',
       in_stock: Boolean(product.in_stock),
-      is_customizable: Boolean(product.is_customizable)
+      is_customizable: Boolean(product.is_customizable),
+      tags: product.tags ?? [],
+      style: localeStyle(product.style),
+      size: localeSize(product.size),
+      season: localeSeason(product.season),
+      weight: product.weight_grams,
+      height: product.height_cm,
+      slug: product.slug,
     }));
 
     res.json({
@@ -301,5 +425,6 @@ module.exports = {
   getCompositions,
   getAllProducts,
   getFeaturedProducts,
-  createOrUpdateProduct
+  createOrUpdateProduct,
+  getDetailProductDataController
 };

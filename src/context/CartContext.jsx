@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { apiUrl } from "../utils/apiConfig";
 
 const CartContext = createContext();
 
@@ -30,7 +31,7 @@ export const CartProvider = ({ children, userId }) => {
       setError(null);
       
       console.log(`🔄 Загрузка корзины для пользователя ${userId}...`);
-      const response = await fetch(`http://localhost:5000/api/cart/user/${userId}`);
+      const response = await fetch(`${apiUrl}/cart/user/${userId}`);
       
       if (!response.ok) {
         throw new Error(`Ошибка сервера: ${response.status}`);
@@ -123,7 +124,7 @@ export const CartProvider = ({ children, userId }) => {
       setError(null);
       
       console.log(`➕ Добавление товара ${product.id} в корзину...`);
-      const response = await fetch('http://localhost:5000/api/cart/add', {
+      const response = await fetch(`${apiUrl}/cart/add`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -185,7 +186,7 @@ export const CartProvider = ({ children, userId }) => {
       setError(null);
       
       console.log(`📊 Обновление количества товара ${productId} до ${quantity}...`);
-      const response = await fetch('http://localhost:5000/api/cart/update', {
+      const response = await fetch(`${apiUrl}/cart/update`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -232,7 +233,7 @@ export const CartProvider = ({ children, userId }) => {
       setError(null);
       
       console.log(`➖ Удаление товара ${productId} из корзины...`);
-      const response = await fetch('http://localhost:5000/api/cart/remove', {
+      const response = await fetch(`${apiUrl}/cart/remove`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -272,7 +273,7 @@ export const CartProvider = ({ children, userId }) => {
       setError(null);
       
       console.log(`🗑️ Очистка корзины...`);
-      const response = await fetch('http://localhost:5000/api/cart/clear', {
+      const response = await fetch(`${apiUrl}/cart/clear`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

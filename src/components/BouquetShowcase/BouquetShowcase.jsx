@@ -1,11 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+
+import { DetailFlowerModal } from '../DetailFlowerModal';
 import ProductCard from '../ProductCard/ProductCard';
 import './BouquetShowcase.css';
+import { apiUrl } from '../../utils/apiConfig';
 
 const BouquetShowcase = () => {
+
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [viewDetail, setViewDetail] = useState(null);
 
   useEffect(() => {
     fetchProducts();
@@ -17,7 +22,7 @@ const BouquetShowcase = () => {
       setError(null);
       console.log('🔄 Загружаем товары из БД...');
       
-      const response = await fetch('http://localhost:5000/api/products/featured');
+      const response = await fetch(`${apiUrl}/products/featured`);
       
       if (!response.ok) {
         throw new Error(`Ошибка сервера: ${response.status}`);
@@ -42,7 +47,7 @@ const BouquetShowcase = () => {
   };
 
   const handleQuickView = (product) => {
-    console.log('Быстрый просмотр:', product);
+    setViewDetail(product);
   };
 
   if (loading) {
@@ -132,6 +137,10 @@ const BouquetShowcase = () => {
           </div>
         </div>
       </div>
+
+      { viewDetail && (
+        <DetailFlowerModal product={viewDetail} typeFlower="Букет" handleClose={() => setViewDetail(null) } />
+      ) }
     </section>
   );
 };

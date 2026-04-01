@@ -1,5 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 
+import { apiUrl } from "../utils/apiConfig"
+
 const AuthContext = createContext();
 
 export const useAuth = () => {
@@ -16,7 +18,7 @@ export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [token, setToken] = useState(null);
 
-  const API_URL = 'http://localhost:5000/api/auth';
+  const API_URL = `${apiUrl}/auth`;
 
   useEffect(() => {
     checkAuth();

@@ -23,11 +23,11 @@ export default function Footer() {
         <div className="footer__section">
           <h4>Навигация</h4>
           <ul>
-            <li><a href="#bouquets">Букеты</a></li>
-            <li><a href="#plants">Растения</a></li>
-            <li><a href="#compositions">Композиции</a></li>
-            <li><a href="#about">О нас</a></li>
-            <li><a href="#delivery">Доставка</a></li>
+            <li><a href="/bouquets">Букеты</a></li>
+            <li><a href="/plants">Растения</a></li>
+            <li><a href="/compositions">Композиции</a></li>
+            <li><a href="/about">О нас</a></li>
+            <li><a href="/delivery">Доставка</a></li>
           </ul>
         </div>
 

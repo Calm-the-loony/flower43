@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { CartProvider } from './context/CartContext';
 import { FavoritesProvider } from './context/FavoritesContext';
@@ -8,6 +7,7 @@ import Header from './components/Header/Header';
 import Hero from './components/Hero/Hero';
 import BouquetShowcase from './components/BouquetShowcase/BouquetShowcase';
 import Advantages from './components/Advantages/Advantages';
+import ProductDetailPage from './pages/ProductDetailPage';
 import Footer from './components/Footer/Footer';
 import AuthForm from './pages/Auth/AuthForm';
 import Profile from './pages/Profile/Profile';
@@ -81,6 +81,7 @@ function AppContent() {
             <Route path="/compositions" element={<Compositions />} />
             <Route path="/custom-bouquet" element={<CustomBouquet />} />
             <Route path="/custom-composition" element={<CustomBouquet />} />
+            <Route path="/product/:slug" element={<ProductDetailPage />} />
 
             {/* Страницы ошибок */}
             <Route path="/500" element={<ServerError />} />
