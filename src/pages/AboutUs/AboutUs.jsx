@@ -199,7 +199,7 @@ export default function AboutUs() {
             </p>
             <div className="about-cta-buttons">
               <Link to="/bouquets" className="about-cta-button primary">Смотреть каталог</Link>
-              <Link to="/custom" className="about-cta-button secondary">Заказать дизайн</Link>
+              <Link to="/custom-composition" className="about-cta-button secondary">Заказать дизайн</Link>
             </div>
           </div>
         </div>
